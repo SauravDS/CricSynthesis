@@ -357,6 +357,19 @@ def apply_custom_css():
 
 def initialize_session_state():
     """Initialize session state variables."""
+    # Dataset upload states
+    if 'uploaded_data' not in st.session_state:
+        st.session_state.uploaded_data = None
+    if 'model_trained' not in st.session_state:
+        st.session_state.model_trained = False
+    if 'current_league' not in st.session_state:
+        st.session_state.current_league = "BBL Women's"
+    if 'model_info' not in st.session_state:
+        st.session_state.model_info = None
+    if 'loaded_model_name' not in st.session_state:
+        st.session_state.loaded_model_name = None
+    
+    # Existing states
     if 'data_loaded' not in st.session_state:
         st.session_state.data_loaded = False
     if 'df' not in st.session_state:
@@ -384,30 +397,52 @@ def main():
     
     # Header
     st.markdown('<h1 class="main-header">🏏 Fantasy Cricket Team Predictor</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="sub-header">ML-Powered Dream11 Team Predictions for BBL Women\'s T20</p>', unsafe_allow_html=True)
+    st.markdown(f'<p class="sub-header">ML-Powered Dream11 Team Predictions for {st.session_state.current_league}</p>', unsafe_allow_html=True)
     
     # Sidebar
     with st.sidebar:
         st.image("https://img.icons8.com/fluency/96/cricket.png", width=80)
         st.title("Navigation")
         
-        page = st.radio(
-            "Select Page",
-            ["🏠 Home", "🎯 Team Selection", "🏟️ Ground Selection", 
-             "👥 Player Pool", "📊 Predictions"],
-            label_visibility="collapsed"
-        )
+        # Check if dataset is uploaded and model trained
+        if not st.session_state.uploaded_data:
+            page = "📤 Upload Dataset"
+            st.info("📤 Upload a dataset to begin")
+        elif not st.session_state.model_trained:
+            page = "⚙️ Train Model"
+            st.info("⚙️ Train model on uploaded data")
+        else:
+            page = st.radio(
+                "Select Page",
+                ["🏠 Home", "🎯 Team Selection", "🏟️ Ground Selection", 
+                 "👥 Player Pool", "📊 Predictions"],
+                label_visibility="collapsed"
+            )
+            
+            # Model Library button
+            st.markdown("---")
+            if st.button("📚 Model Library", use_container_width=True):
+                page = "📚 Model Library"
+            
+            # Add option to change dataset
+            st.markdown("---")
+            if st.button("🔄 Change Dataset", use_container_width=True):
+                st.session_state.uploaded_data = None
+                st.session_state.model_trained = False
+                st.session_state.data_loaded = False
+                st.rerun()
         
         st.markdown("---")
         st.markdown("### About")
-        st.markdown("""
+        st.markdown(f"""
         This app uses machine learning to predict fantasy cricket team performance
-        based on historical BBL Women's T20 data.
+        for **{st.session_state.current_league}**.
         
         **Features:**
+        - Upload any cricket dataset
+        - On-demand model training
         - ML-powered predictions
         - Dream11 point system
-        - Ground & matchup analysis
         - Optimal team selection
         """)
         
@@ -418,30 +453,347 @@ def main():
             st.warning("⚠️ ML Model Not Found")
             st.info("Run: `python scripts/train_model.py`")
     
-    # Load data on first run
-    if not st.session_state.data_loaded:
-        with st.spinner("Loading dataset..."):
+    # Load data - from uploaded file or default
+    if not st.session_state.data_loaded and st.session_state.uploaded_data is not None:
+        with st.spinner("Loading uploaded dataset..."):
             try:
-                df, loader = load_dataset()
+                from src.data.data_loader import DataLoader
+                df = st.session_state.uploaded_data
+                loader = DataLoader(df)
                 st.session_state.df = df
                 st.session_state.loader = loader
                 st.session_state.data_loaded = True
-                st.success(f"✅ Loaded {len(df)} ball records from {df['match_id'].nunique()} matches")
             except Exception as e:
                 st.error(f"Error loading dataset: {e}")
                 return
     
     # Route to appropriate page
-    if page == "🏠 Home":
+    if page == "📤 Upload Dataset":
+        show_upload_page()
+    elif page == "⚙️ Train Model":
+        show_training_page()
+    elif page == "📚 Model Library":
+        show_model_library_page()
+    elif page == "🏠 Home":
         show_home_page()
     elif page == "🎯 Team Selection":
         show_team_selection_page()
     elif page == "🏟️ Ground Selection":
-        show_ground_selection_page()
+       show_ground_selection_page()
     elif page == "👥 Player Pool":
         show_player_pool_page()
     elif page == "📊 Predictions":
         show_predictions_page()
+
+
+def show_upload_page():
+    """Dataset upload page."""
+    st.markdown("## 📤 Upload Cricket Dataset")
+    
+    st.markdown("""
+    <div class="cricinfo-card">
+        <h3>Upload Your Cricket Dataset</h3>
+        <p>Upload a ball-by-ball CSV file for any cricket league (IPL, BBL, CPL, PSL, etc.)</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Required columns info
+    st.markdown("### 📋 Required Columns")
+    st.markdown("""
+    <div class="feature-box">
+        <p>Your CSV must contain these columns:</p>
+        <ul>
+            <li><code>match_id</code> - Unique match identifier</li>
+            <li><code>batting_team</code> - Batting team name</li>
+            <li><code>bowling_team</code> - Bowling team name</li>
+            <li><code>striker</code> - Batsman on strike</li>
+            <li><code>bowler</code> - Bowler name</li>
+            <li><code>total_runs</code> - Runs scored on ball</li>
+            <li><code>venue</code> - Match venue</li>
+        </ul>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # League name input
+    league_name = st.text_input(
+        "League Name",
+        value="Cricket League",
+        placeholder="e.g., IPL 2024, BBL Women's, CPL 2023",
+        help="Enter the name of your cricket league"
+    )
+    
+    # File uploader
+    uploaded_file =st.file_uploader(
+        "Choose CSV file",
+        type=['csv'],
+        help="Upload ball-by-ball cricket data in CSV format"
+    )
+    
+    if uploaded_file is not None:
+        try:
+            # Read CSV
+            df = pd.read_csv(uploaded_file)
+            
+            st.success(f"✅ File uploaded successfully!")
+            
+            # Validate columns
+            required_cols = ['match_id', 'batting_team', 'bowling_team', 'striker', 
+                           'bowler', 'total_runs', 'venue']
+            missing_cols = [col for col in required_cols if col not in df.columns]
+            
+            if missing_cols:
+                st.error(f"❌ Missing required columns: {', '.join(missing_cols)}")
+                st.info("Please ensure your CSV has all required columns.")
+                return
+            
+            # Show dataset preview
+            st.markdown("### 📊 Dataset Preview")
+            
+            col1, col2, col3, col4 = st.columns(4)
+            with col1:
+                st.metric("Total Balls", f"{len(df):,}")
+            with col2:
+                st.metric("Matches", df['match_id'].nunique())
+            with col3:
+                st.metric("Teams", df['batting_team'].nunique())
+            with col4:
+                st.metric("Players", len(set(df['striker'].unique()) | set(df['bowler'].unique())))
+            
+            st.markdown("**First few rows:**")
+            st.dataframe(df.head(10), use_container_width=True)
+            
+            # Confirm button
+            st.markdown("---")
+            if st.button("✅ Confirm & Proceed to Training", type="primary", use_container_width=True):
+                st.session_state.uploaded_data = df
+                st.session_state.current_league = league_name
+                st.session_state.model_trained = False
+                st.session_state.data_loaded = False
+                st.success(f"Dataset loaded! Proceeding to model training...")
+                st.rerun()
+                
+        except Exception as e:
+            st.error(f"Error reading file: {str(e)}")
+            st.info("Please ensure the file is a valid CSV format.")
+
+
+def show_training_page():
+    """Model training page with progress."""
+    st.markdown(f"## ⚙️ Train Model - {st.session_state.current_league}")
+    
+    if st.session_state.uploaded_data is None:
+        st.error("No dataset uploaded!")
+        return
+    
+    df = st.session_state.uploaded_data
+    
+    # Show dataset info
+    st.markdown("""
+    <div class="premium-banner">
+        <h3>Ready to Train</h3>
+        <p>Your dataset is loaded and validated. Click below to start training.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric("Dataset Size", f"{len(df):,} balls")
+    with col2:
+        st.metric("Matches", df['match_id'].nunique())
+    with col3:
+        st.metric("Teams", df['batting_team'].nunique())
+    
+    st.markdown("---")
+    
+    # Training scope selection
+    st.markdown("### ⚙️ Training Configuration")
+    
+    total_matches = df['match_id'].nunique()
+    
+    training_scope = st.radio(
+        "Training Scope",
+        options=["All Matches", "Recent Matches Only"],
+        help="Train on all matches for better accuracy, or recent matches for faster training"
+    )
+    
+    max_matches = None
+    if training_scope == "Recent Matches Only":
+        max_matches = st.slider(
+            "Number of Recent Matches",
+            min_value=20,
+            max_value=min(100, total_matches),
+            value=50,
+            step=10,
+            help="Limit training to recent matches for faster performance"
+        )
+        st.info(f"⚡ Will train on last {max_matches} of {total_matches} matches (Faster)")
+    else:
+        st.info(f"📊 Will train on all {total_matches} matches (Better accuracy, may take longer)")
+    
+    st.markdown("---")
+    
+    # Training button
+    if st.button("🚀 Start Training", type="primary", use_container_width=True):
+        from src.ml.trainer import train_model_from_dataframe
+        
+        # Progress containers
+        progress_bar = st.progress(0)
+        status_text = st.empty()
+        
+        def update_progress(message, percent=None):
+            status_text.write(f"**{message}**")
+            if percent is not None:
+                progress_bar.progress(percent / 100)
+        
+        try:
+            # Train model
+            with st.spinner("Training in progress..."):
+                model, feature_names, model_info = train_model_from_dataframe(
+                    df, 
+                    progress_callback=update_progress,
+                    league_name=st.session_state.current_league,
+                    max_matches=max_matches  # Pass the user's choice
+                )
+            
+            # Show results
+            st.success("🎉 Training Complete!")
+            
+            st.markdown("### 📈 Model Performance")
+            best_model = model_info['best_model']
+            scores = model_info['model_scores'][best_model]
+            
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.metric("Best Model", best_model)
+            with col2:
+                st.metric("R² Score", f"{scores['r2']:.3f}")
+            with col3:
+                st.metric("MAE", f"{scores['mae']:.2f}")
+            
+            # Save model info
+            st.session_state.model_info = model_info
+            st.session_state.model_trained = True
+            
+            # Option to save model to library
+            st.markdown("---")
+            st.markdown("### 💾 Save Model for Later")
+            
+            col1, col2 = st.columns([3, 1])
+            with col1:
+                model_save_name = st.text_input(
+                    "Model Name",
+                    value=f"{st.session_state.current_league}_{datetime.now().strftime('%Y%m%d')}",
+                    help="Enter a unique name to save this trained model"
+                )
+            with col2:
+                st.write("")
+                st.write("")
+                if st.button("💾 Save Model", use_container_width=True):
+                    from src.ml.model_library import ModelLibrary
+                    library = ModelLibrary()
+                    
+                    try:
+                        library.save_model(model, feature_names, model_info, model_save_name)
+                        st.success(f"✅ Model saved as '{model_save_name}'")
+                        st.info("You can load this model later from the Model Library")
+                    except Exception as e:
+                        st.error(f"Failed to save: {str(e)}")
+            
+            st.markdown("---")
+            if st.button("✅ Proceed to App", type="primary", use_container_width=True):
+                st.rerun()
+                
+        except Exception as e:
+            st.error(f"Training failed: {str(e)}")
+            st.info("Please check your dataset format and try again.")
+    
+    # Option to go back
+    st.markdown("---")
+    if st.button("⬅️ Back to Upload", use_container_width=True):
+        st.session_state.uploaded_data = None
+        st.rerun()
+
+
+def show_model_library_page():
+    """Model library management page."""
+    st.markdown("## 📚 Model Library")
+    
+    st.markdown("""
+    <div class="premium-banner">
+        <h3>Saved Models</h3>
+        <p>Load previously trained models or manage your model library</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    from src.ml.model_library import ModelLibrary
+    library = ModelLibrary()
+    
+    saved_models = library.list_models()
+    
+    if not saved_models:
+        st.info("📭 No saved models yet. Train a model and save it to access later!")
+        return
+    
+    st.markdown(f"### {len(saved_models)} Saved Models")
+    
+    for model in saved_models:
+        with st.expander(f"🏏 {model['league_name']} - {model['model_name']}"):
+            col1, col2,col3 = st.columns(3)
+            
+            with col1:
+                st.metric("Matches", model['n_matches'])
+                st.metric("Teams", model['n_teams'])
+            
+            with col2:
+                st.metric("Best Model", model['best_model'])
+                st.metric("R² Score", f"{model['r2_score']:.3f}")
+            
+            with col3:
+                st.metric("Saved At", model['saved_at'].split()[0])
+                st.write("")
+            
+            # Action buttons
+            col_load, col_delete = st.columns(2)
+            
+            with col_load:
+                if st.button(f"📥 Load Model", key=f"load_{model['model_name']}", use_container_width=True):
+                    try:
+                        # Load model
+                        loaded_model, feature_names, model_info = library.load_model(model['model_name'])
+                        
+                        # Also load model to active location for predictor
+                        import joblib
+                        joblib.dump(loaded_model, 'models/fantasy_predictor.pkl')
+                        joblib.dump(feature_names, 'models/feature_names.pkl')
+                        
+                        # Update session state
+                        st.session_state.current_league = model['league_name']
+                        st.session_state.model_info = model_info
+                        st.session_state.model_trained = True
+                        st.session_state.loaded_model_name = model['model_name']
+                        
+                        # If dataset was uploaded for this, load it
+                        # Otherwise just mark the model as loaded
+                        
+                        st.success(f"✅ Loaded '{model['model_name']}'")
+                        st.info("Note: Make sure to upload the corresponding dataset for this league")
+                        st.rerun()
+                    except Exception as e:
+                        st.error(f"Failed to load: {str(e)}")
+            
+            with col_delete:
+                if st.button(f"🗑️ Delete", key=f"del_{model['model_name']}", use_container_width=True, type="secondary"):
+                    try:
+                        library.delete_model(model['model_name'])
+                        st.success(f"Deleted '{model['model_name']}'")
+                        st.rerun()
+                    except Exception as e:
+                        st.error(f"Failed to delete: {str(e)}")
+    
+    # Show currently loaded model
+    if st.session_state.loaded_model_name:
+        st.markdown("---")
+        st.info(f"**Currently Active:** {st.session_state.loaded_model_name} ({st.session_state.current_league})")
 
 
 def show_home_page():
