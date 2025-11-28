@@ -55,6 +55,35 @@ def train_model_from_dataframe(df: pd.DataFrame, progress_callback=None, league_
         if missing:
             raise ValueError(f"Missing required columns: {missing}")
         
+        # Preprocess data - create derived columns needed by FantasyPointsCalculator
+        update_progress("Preprocessing data...", 8)
+        
+        # Fill NaN values for wicket-related columns
+        if 'wicket_type' in df.columns:
+            df['wicket_type'] = df['wicket_type'].fillna('none')
+        else:
+            df['wicket_type'] = 'none'
+            
+        if 'player_dismissed' in df.columns:
+            df['player_dismissed'] = df['player_dismissed'].fillna('')
+        else:
+            df['player_dismissed'] = ''
+        
+        # Create is_wicket flag
+        df['is_wicket'] = df['wicket_type'] != 'none'
+        
+        # Create boundary flags
+        if 'runs_off_bat' in df.columns:
+            df['is_four'] = df['runs_off_bat'] == 4
+            df['is_six'] = df['runs_off_bat'] == 6
+        else:
+            df['is_four'] = False
+            df['is_six'] = False
+        df['is_boundary'] = df['is_four'] | df['is_six']
+        
+        # Create dot ball flag
+        df['is_dot'] = df['total_runs'] == 0
+        
         # Calculate fantasy points
         update_progress("Calculating fantasy points...", 10)
         calculator = FantasyPointsCalculator(df)
