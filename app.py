@@ -267,7 +267,7 @@ def main():
         st.markdown("---")
         
         # Check if dataset is uploaded and model trained
-        if not st.session_state.uploaded_data:
+        if st.session_state.uploaded_data is None:
             page = "Data Ingestion"
             st.info("Please upload a dataset to proceed.")
         elif not st.session_state.model_trained:
