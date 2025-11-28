@@ -1,213 +1,148 @@
-# Fantasy Cricket Team Predictor 🏏
+# Fantasy Cricket Analytics Platform
 
-An ML-powered web application that predicts optimal Dream11 fantasy cricket teams using historical CSA T20 Challenge ball-by-ball data.
+A machine learning-powered web application for predicting fantasy cricket player performance and generating optimal team selections. Upload any cricket dataset, train custom models, and generate data-driven predictions for Dream11 and other fantasy platforms.
 
 ## Features
 
-- **Machine Learning Predictions**: XGBoost/Random Forest models trained on historical fantasy points
-- **Dream11 Point System**: Full implementation of official Dream11 scoring rules
-- **Contextual Analysis**: Ground-specific and opposition-specific performance metrics
-- **Smart Team Selection**: Automated selection of top 14 players with balanced composition
-- **Captain/VC Recommendations**: Data-driven captain and vice-captain suggestions
-- **Interactive Web UI**: Beautiful Streamlit interface with step-by-step wizard
+- Universal dataset support for any T20 cricket league (IPL, BBL, CPL, etc.)
+- On-demand ML model training with configurable scope
+- Multiple algorithm evaluation (Random Forest, XGBoost, Gradient Boosting)
+- Dream11-compliant fantasy points calculation
+- Contextual analysis (venue, opposition, form, consistency)
+- Interactive team builder with 22-player pool
+- Model library for managing multiple league-specific models
+- Material Design UI with professional analytics dashboard
 
-## Project Structure
-
-```
-fantasy-cricket-analyzer/
-├── all_matches.csv              # CSA T20 Challenge ball-by-ball dataset
-├── app.py                       # Main Streamlit application
-├── requirements.txt             # Python dependencies
-├── README.md                    # This file
-│
-├── src/
-│   ├── data/
-│   │   ├── data_loader.py      # CSV loading and preprocessing
-│   │   └── data_aggregator.py  # Player statistics aggregation
-│   │
-│   ├── features/
-│   │   ├── player_features.py       # Batting/bowling feature extraction
-│   │   └── contextual_features.py   # Ground/opposition features
-│   │
-│   ├── fantasy/
-│   │   └── points_calculator.py     # Dream11 points calculation
-│   │
-│   ├── ml/
-│   │   └── predictor.py             # ML prediction engine
-│   │
-│   └── optimization/
-│       └── team_selector.py         # Fantasy team optimization
-│
-├── scripts/
-│   └── train_model.py          # Model training script
-│
-└── models/
-    ├── fantasy_predictor.pkl   # Trained ML model (generated)
-    └── feature_names.pkl       # Feature names (generated)
-```
-
-## Setup Instructions
-
-### 1. Install Dependencies
+## Installation
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Train the ML Model
+## Usage
 
-Before running the app, you need to train the machine learning model:
-
-```bash
-python scripts/train_model.py
-```
-
-This will:
-- Load and process the dataset
-- Calculate historical fantasy points
-- Extract features for all player-match combinations
-- Train multiple ML models (Random Forest, XGBoost, Gradient Boosting)
-- Save the best performing model to `models/fantasy_predictor.pkl`
-
-**Note**: Training may take 10-30 minutes depending on your hardware.
-
-### 3. Run the Application
+### 1. Start the Application
 
 ```bash
 streamlit run app.py
 ```
 
-The app will open in your browser at `http://localhost:8501`
+The application will launch at `http://localhost:8501`
 
-## How to Use
+### 2. Upload Dataset
 
-### Step 1: Select Teams
-- Choose two teams that will compete in the match
-- Example: Warriors vs Titans
+Navigate to "Data Ingestion" and upload a ball-by-ball cricket CSV file with the following required columns:
 
-### Step 2: Select Ground
-- Pick the venue where the match will be played
-- View historical ground statistics
+- `match_id`
+- `batting_team`
+- `bowling_team`
+- `striker`
+- `bowler`
+- `total_runs`
+- `venue`
 
-### Step 3: Build Player Pool
-- Select exactly 22 players from both teams
-- Assign each player to their respective team (Team 1 or Team 2)
+### 3. Train Model
 
-### Step 4: Get Predictions
-- Click "Generate Predictions"
-- ML model analyzes each player's:
-  - Historical performance
-  - Recent form
-  - Ground suitability
-  - Opposition matchup
-  - Consistency metrics
+Go to "Model Training" to configure and execute the training protocol:
 
-### Step 5: Review Fantasy Team
-- View top 14 recommended players
-- See captain and vice-captain suggestions
-- Review complete 22-player ranking
-- Check expected fantasy points
+- Choose training scope (complete dataset or recent matches only)
+- Monitor real-time progress and performance metrics
+- Save trained models to the repository for future use
 
-## Dream11 Point System
+### 4. Generate Predictions
 
-### Batting
-- Run: +1 point
-- Boundary (4): +1 bonus
-- Six (6): +2 bonus
-- 30 runs: +4 bonus
-- Half-century (50): +8 bonus
-- Century (100): +16 bonus
-- Duck (dismissed for 0): -2 points
+Complete the workflow:
 
-### Bowling
-- Wicket: +25 points
-- 3-wicket haul: +4 bonus
-- 4-wicket haul: +8 bonus
-- 5-wicket haul: +16 bonus
-- Maiden over: +12 points
+1. Select competing teams (Squad Configuration)
+2. Choose match venue (Venue Analysis)
+3. Build 22-player pool (Roster Management)
+4. Generate performance forecast
 
-### Fielding
-- Catch: +8 points
-- Stumping: +12 points
-- Run out (direct): +12 points
-- Run out (indirect): +6 points
+The system will output:
+- Ranked list of all 22 players with predicted points
+- Top 3 picks (Captain, Vice-Captain, Top Pick)
+- Optimal 11-player lineup
 
-### Economy Rate (min 2 overs)
-- Below 5: +6 points
-- 5-5.99: +4 points
-- 6-7: +2 points
-- 10-11: -2 points
-- 11-12: -4 points
-- Above 12: -6 points
+## Project Structure
 
-### Strike Rate (min 10 balls)
-- Above 170: +6 points
-- 150-170: +4 points
-- 130-150: +2 points
-- 60-70: -2 points
-- 50-60: -4 points
-- Below 50: -6 points
+```
+fantasy-cricket-analyzer/
+├── app.py                          # Main Streamlit application
+├── requirements.txt                # Python dependencies
+├── models/
+│   └── library/                    # Saved model repository
+├── src/
+│   ├── data/
+│   │   └── data_loader.py         # Dataset processing
+│   ├── fantasy/
+│   │   └── points_calculator.py   # Dream11 points engine
+│   ├── ml/
+│   │   ├── feature_engineering.py # Feature extraction
+│   │   ├── trainer.py             # Model training pipeline
+│   │   ├── predictor.py          # Prediction engine
+│   │   └── model_library.py      # Model persistence
+│   └── optimization/
+│       └── team_selector.py       # Team optimization
+└── scripts/
+    └── train_model.py             # Offline training script
+```
 
-## ML Model Details
+## Technical Details
 
-### Features Used
-- **Batting Features**: Average runs, strike rate, recent form, consistency
-- **Bowling Features**: Average wickets, economy rate, recent form, consistency
-- **Contextual Features**: Performance at specific grounds, vs specific opposition
-- **Form Features**: Last 5 matches performance with recency weighting
-- **Consistency Features**: Standard deviation and coefficient of variation
+### Machine Learning Pipeline
 
-### Models Evaluated
-1. Random Forest Regressor
-2. XGBoost Regressor
-3. Gradient Boosting Regressor
+The training pipeline implements:
 
-The best performing model (typically XGBoost) is automatically selected based on R² score.
+1. Data validation and preprocessing
+2. Fantasy points calculation from historical data
+3. Feature engineering (batting, bowling, form, consistency, venue, opposition)
+4. Multi-model training with cross-validation
+5. Automatic best model selection based on R² score
+6. Model persistence with metadata
 
-### Training Methodology
-- **Temporal Split**: Uses date-based train/test split to avoid data leakage
-- **Feature Engineering**: Extracts features from data BEFORE each match
-- **Target Variable**: Historical Dream11 fantasy points calculated from actual match data
+### Prediction Features
 
-## Dataset Information
+Per player, the model considers:
 
-- **Source**: Cricsheet (CSA T20 Challenge)
-- **Records**: 65,051 ball-by-ball entries
-- **Matches**: ~100+ matches
-- **Teams**: 11 CSA teams
-- **Venues**: 16 cricket grounds across South Africa
-- **Columns**: 22 fields including match details, players, runs, wickets, dismissals
+- Batting: average, strike rate, boundaries, high scores
+- Bowling: wickets, economy, maidens, consistency
+- Form: weighted recent performance (last 5 matches)
+- Consistency: standard deviation, coefficient of variation
+- Venue: historical performance at selected ground
+- Opposition: matchup-specific statistics
 
-## Technical Stack
+### Dream11 Scoring System
 
-- **Python 3.8+**
-- **Streamlit**: Web UI framework
-- **pandas**: Data manipulation
-- **scikit-learn**: ML models and preprocessing
-- **XGBoost**: Gradient boosting
-- **joblib**: Model persistence
-- **matplotlib/seaborn/plotly**: Visualizations
+Full implementation of official Dream11 point rules:
+
+**Batting**: Runs (+1/run), boundaries (+1/4, +2/6), milestones (30/50/100 runs), duck penalty (-2)
+
+**Bowling**: Wickets (+25), wicket hauls (+4/8/16), maidens (+12)
+
+**Fielding**: Catches (+8), stumpings (+12), run-outs (+6/12)
+
+**Bonuses/Penalties**: Economy rate bonuses/penalties, strike rate bonuses/penalties
+
+## Technology Stack
+
+- Python 3.8+
+- Streamlit (web framework)
+- pandas (data processing)
+- scikit-learn (ML models, preprocessing)
+- XGBoost (gradient boosting)
+- joblib (model serialization)
 
 ## Limitations
 
-- Predictions are based on historical data only
-- Does not account for:
-  - Player injuries
-  - Recent team changes
-  - Weather conditions
-  - Match importance/pressure
-  - Real-time match situation
-- Fielding points are approximate (limited fielding data in Cricsheet)
+The system does not account for:
 
-## Future Enhancements
+- Player injuries or unavailability
+- Real-time team changes or announcements
+- Weather conditions or pitch reports
+- Match context (knockout vs league stage)
+- In-play match dynamics
 
-- Add player injury tracking
-- Incorporate weather data
-- Live match prediction updates
-- More advanced ensemble models
-- Player comparison visualizations
-- Historical prediction accuracy tracking
-- Export predictions to CSV/PDF
+Predictions are statistical estimates based on historical data only.
 
 ## License
 
@@ -215,10 +150,6 @@ MIT License
 
 ## Acknowledgments
 
-- Data source: Cricsheet (https://cricsheet.org/)
-- Dream11 scoring system reference
-- CSA T20 Challenge
+Dataset compatibility: Cricsheet format (https://cricsheet.org/)
 
----
-
-**Built with ❤️ for cricket fantasy enthusiasts**
+Created by Saurav

@@ -15,333 +15,206 @@ from src.data.data_loader import load_dataset
 
 # Page configuration
 st.set_page_config(
-    page_title="Fantasy Cricket Predictor",
-    page_icon="🏏",
+    page_title="Fantasy Cricket Analytics",
+    page_icon="📊",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Professional Enterprise CSS
+# Premium Material Design CSS
 def apply_custom_css():
     st.markdown("""
     <style>
-    /* Import Professional Fonts */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+    /* Import Fonts: Roboto (Material Standard) & Montserrat (Headings) */
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap');
     
-    /* Global Styles */
+    :root {
+        --primary-color: #3F51B5; /* Indigo 500 */
+        --primary-dark: #303F9F;  /* Indigo 700 */
+        --accent-color: #009688;  /* Teal 500 */
+        --bg-color: #F5F7FA;
+        --card-bg: #FFFFFF;
+        --text-high: #202124;
+        --text-medium: #5F6368;
+        --border-color: #E0E0E0;
+        --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+        --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+        --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+    }
+
+    /* Global Reset & Typography */
     * {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-family: 'Roboto', sans-serif;
+        color: var(--text-high);
     }
     
-    /* Main Container - Professional Gray Background */
-    .main {
-        background: #f5f7fa;
-        padding: 2rem 3rem;
-    }
-    
-    /* Sidebar - Dark Professional Theme */
-    [data-testid="stSidebar"] {
-        background: #1a1d29;
-        border-right: 1px solid #2d3142;
-    }
-    
-    [data-testid="stSidebar"] * {
-        color: #e4e7eb !important;
-    }
-    
-    [data-testid="stSidebar"] h1, 
-    [data-testid="stSidebar"] h2, 
-    [data-testid="stSidebar"] h3 {
-        color: #ffffff !important;
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Montserrat', sans-serif;
+        color: var(--text-high) !important;
         font-weight: 600;
-        letter-spacing: -0.01em;
+    }
+
+    /* Main Layout */
+    .main {
+        background-color: var(--bg-color);
     }
     
-    /* Main Header - Enterprise Style */
+    /* Sidebar Styling */
+    [data-testid="stSidebar"] {
+        background-color: #FFFFFF;
+        border-right: 1px solid var(--border-color);
+    }
+    
+    [data-testid="stSidebar"] .block-container {
+        padding-top: 2rem;
+    }
+
+    /* Typography Overrides */
     .main-header {
-        font-size: 2.25rem;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 2.5rem;
         font-weight: 700;
-        color: #1a1d29;
+        color: var(--primary-color);
         margin-bottom: 0.5rem;
-        letter-spacing: -0.03em;
+        letter-spacing: -0.5px;
     }
     
     .sub-header {
-        font-size: 1rem;
-        color: #6b7280;
+        font-size: 1.1rem;
+        color: var(--text-medium);
         font-weight: 400;
-        margin-bottom: 2.5rem;
+        margin-bottom: 3rem;
     }
-    
-    /* Section Headers */
-    h1, h2, h3 {
-        color: #1a1d29 !important;
-        font-weight: 600 !important;
-        letter-spacing: -0.02em !important;
-    }
-    
-    h2 {
-        font-size: 1.5rem !important;
-        margin-bottom: 1.5rem !important;
-        padding-bottom: 0.75rem;
-        border-bottom: 2px solid #e5e7eb;
-    }
-    
-    /* Professional Data Card */
-    .analytics-card {
-        background: #ffffff;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
+
+    /* Material Cards */
+    .material-card {
+        background-color: var(--card-bg);
+        border-radius: 12px;
         padding: 1.5rem;
-        margin: 1rem 0;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        margin-bottom: 1.5rem;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border-color);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     
-    .analytics-card:hover {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        border-color: #d1d5db;
+    .material-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
     }
-    
-    /* Metric Display - Dashboard Style */
-    .metric-display {
-        background: #ffffff;
-        border: 1px solid #e5e7eb;
-        border-left: 4px solid #3b82f6;
-        padding: 1.25rem 1.5rem;
-        margin: 0.75rem 0;
-    }
-    
-    .metric-label {
-        font-size: 0.75rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: #6b7280;
-        margin-bottom: 0.5rem;
-    }
-    
-    .metric-value {
-        font-size: 2rem;
-        font-weight: 700;
-        color: #1a1d29;
-        font-family: 'IBM Plex Mono', monospace;
-    }
-    
-    /* Professional Buttons */
-    .stButton > button {
-        background: #3b82f6;
+
+    /* KPI Cards */
+    .kpi-card {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
         color: white;
-        border: none;
-        padding: 0.75rem 1.5rem;
-        font-size: 0.875rem;
-        font-weight: 600;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: all 0.2s ease;
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        box-shadow: var(--shadow-md);
+    }
+    
+    .kpi-value {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin: 0.5rem 0;
+        color: white;
+    }
+    
+    .kpi-label {
+        font-size: 0.9rem;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
+        letter-spacing: 1px;
+        opacity: 0.9;
+        color: white;
+    }
+
+    /* Buttons */
+    .stButton > button {
+        background-color: var(--primary-color);
+        color: white;
+        border-radius: 8px;
+        border: none;
+        padding: 0.6rem 1.5rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: var(--shadow-sm);
+        transition: all 0.2s;
     }
     
     .stButton > button:hover {
-        background: #2563eb;
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+        background-color: var(--primary-dark);
+        box-shadow: var(--shadow-md);
     }
     
-    .stButton > button:active {
-        transform: scale(0.98);
-    }
-    
-    /* Input Fields - Clean Professional */
-    .stSelectbox > div > div,
-    .stTextInput > div > div > input {
-        background: #ffffff !important;
-        border: 1px solid #d1d5db !important;
-        border-radius: 6px !important;
-        color: #1a1d29 !important;
-        font-weight: 400 !important;
-        padding: 0.5rem 0.75rem !important;
-    }
-    
-    .stSelectbox > div > div:focus-within,
-    .stTextInput > div > div > input:focus {
-        border-color: #3b82f6 !important;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
-    }
-    
-    /* DataFrames - Professional Table */
-    .stDataFrame {
-        background: #ffffff;
+    /* Inputs */
+    .stTextInput > div > div > input, .stSelectbox > div > div {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
         border-radius: 8px;
-        border: 1px solid #e5e7eb;
+        color: var(--text-high);
     }
     
-    /* Table Headers */
+    .stTextInput > div > div > input:focus, .stSelectbox > div > div:focus-within {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.2);
+    }
+
+    /* Dataframes */
+    .stDataFrame {
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    
     thead tr th {
-        background-color: #f9fafb !important;
-        color: #1a1d29 !important;
+        background-color: #F8F9FA !important;
+        color: var(--text-medium) !important;
         font-weight: 600 !important;
         text-transform: uppercase;
-        font-size: 0.75rem;
-        letter-spacing: 0.05em;
-        border-bottom: 2px solid #e5e7eb !important;
+        font-size: 0.85rem;
     }
-    
-    /* Alert Boxes - Subtle Professional */
-    .stAlert {
-        background: #ffffff !important;
-        border-radius: 6px !important;
-        border: 1px solid #e5e7eb !important;
-        border-left: 4px solid #3b82f6 !important;
-    }
-    
-    /* Radio Buttons */
-    .stRadio > div {
-        background: #f9fafb;
-        border-radius: 6px;
-        padding: 1rem;
-        border: 1px solid #e5e7eb;
-    }
-    
-    /* Metrics - Professional Dashboard Style */
+
+    /* Metrics */
     [data-testid="stMetricValue"] {
-        font-size: 2rem !important;
+        color: var(--primary-color) !important;
         font-weight: 700 !important;
-        color: #1a1d29 !important;
-        font-family: 'IBM Plex Mono', monospace !important;
     }
     
     [data-testid="stMetricLabel"] {
-        font-size: 0.75rem !important;
-        font-weight: 600 !important;
-        color: #6b7280 !important;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
+        color: var(--text-medium) !important;
     }
-    
-    [data-testid="stMetricDelta"] {
-        font-size: 0.875rem !important;
-        font-weight: 500 !important;
-    }
-    
-    /* Dividers */
-    hr {
-        border-color: #e5e7eb !important;
-        margin: 2rem 0 !important;
-    }
-    
-    /* Text */
-    p {
-        color: #4b5563 !important;
-        line-height: 1.6;
-        font-size: 0.95rem;
-    }
-    
-    label {
-        color: #374151 !important;
-        font-weight: 500 !important;
-        font-size: 0.875rem !important;
-    }
-    
-    /* Professional Status Badge */
-    .status-badge {
-        display: inline-block;
-        background: #dbeafe;
-        color: #1e40af;
-        padding: 0.25rem 0.75rem;
-        border-radius: 12px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-    
-    .status-badge-success {
-        background: #d1fae5;
-        color: #065f46;
-    }
-    
-    .status-badge-warning {
-        background: #fef3c7;
-        color: #92400e;
-    }
-    
-    /* Section Separator */
-    .section-separator {
-        height: 1px;
-        background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
-        margin: 2rem 0;
-    }
-    
-    /* Professional Info Panel */
-    .info-panel {
-        background: #f9fafb;
-        border: 1px solid #e5e7eb;
-        border-left: 4px solid #6b7280;
-        padding: 1rem 1.25rem;
-        margin: 1rem 0;
-        border-radius: 4px;
-    }
-    
-    .info-panel-primary {
-        border-left-color: #3b82f6;
-        background: #eff6ff;
-    }
-    
-    .info-panel-success {
-        border-left-color: #10b981;
-        background: #f0fdf4;
-    }
-    
-    /* Professional Header Banner */
-    .header-banner {
-        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-        color: white;
-        padding: 2rem 2.5rem;
-        border-radius: 8px;
-        margin-bottom: 2rem;
-    }
-    
-    .header-banner h2 {
-        color: white !important;
-        border: none !important;
-        margin-bottom: 0.5rem !important;
-    }
-    
-    .header-banner p {
-        color: #dbeafe !important;
-    }
-    
-    /* Data Grid Layout */
-    .data-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
-        margin: 1.5rem 0;
-    }
-    
-    /* Progress Bar */
-    .stProgress > div > div {
-        background: #3b82f6 !important;
-    }
-    
-    /* Code blocks */
-    code {
-        background: #f3f4f6;
-        padding: 0.2rem 0.4rem;
-        border-radius: 3px;
-        font-family: 'IBM Plex Mono', monospace;
-        font-size: 0.875rem;
-        color: #1f2937;
-    }
-    
+
     /* Expander */
     .streamlit-expanderHeader {
-        background: #f9fafb;
-        border-radius: 6px;
-        font-weight: 600;
+        background-color: var(--card-bg);
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
     }
+    
+    /* Custom Classes for Content */
+    .section-title {
+        font-size: 1.5rem;
+        color: var(--primary-color);
+        margin: 2rem 0 1rem 0;
+        border-bottom: 2px solid var(--accent-color);
+        padding-bottom: 0.5rem;
+        display: inline-block;
+    }
+    
+    .info-box {
+        background-color: #E8F5E9;
+        border-left: 4px solid var(--accent-color);
+        padding: 1rem;
+        border-radius: 4px;
+        margin: 1rem 0;
+        color: #2E7D32;
+    }
+    
     </style>
     """, unsafe_allow_html=True)
+
+
+
 
 
 def initialize_session_state():
@@ -352,7 +225,7 @@ def initialize_session_state():
     if 'model_trained' not in st.session_state:
         st.session_state.model_trained = False
     if 'current_league' not in st.session_state:
-        st.session_state.current_league = "BBL Women's"
+        st.session_state.current_league = "T20 League"
     if 'model_info' not in st.session_state:
         st.session_state.model_info = None
     if 'loaded_model_name' not in st.session_state:
@@ -390,21 +263,21 @@ def main():
     
     # Sidebar
     with st.sidebar:
-        st.image("https://img.icons8.com/fluency/96/cricket.png", width=80)
-        st.title("Navigation")
+        st.markdown("### FCA Platform")
+        st.markdown("---")
         
         # Check if dataset is uploaded and model trained
         if not st.session_state.uploaded_data:
-            page = "Upload Dataset"
-            st.info("Upload a dataset to begin")
+            page = "Data Ingestion"
+            st.info("Please upload a dataset to proceed.")
         elif not st.session_state.model_trained:
-            page = "Train Model"
-            st.info("Train model on uploaded data")
+            page = "Model Training"
+            st.info("Model training required.")
         else:
             page = st.radio(
-                "Select Page",
-                ["Dashboard", "Team Selection", "Ground Selection", 
-                 "Player Pool", "Predictions"],
+                "Navigation",
+                ["Analytics Dashboard", "Squad Configuration", "Venue Analysis", 
+                 "Roster Management", "Performance Forecast"],
                 label_visibility="collapsed"
             )
             
@@ -437,10 +310,13 @@ def main():
         
         # Show model status
         if os.path.exists('models/fantasy_predictor.pkl'):
-            st.success("✅ ML Model Loaded")
+            st.success("ML Model Loaded")
         else:
-            st.warning("⚠️ ML Model Not Found")
-            st.info("Run: `python scripts/train_model.py`")
+            st.warning("ML Model Not Found")
+            st.info("Please train a model via the 'Model Training' page.")
+            
+        st.markdown("---")
+        st.markdown('<div style="text-align: center; color: #666; font-size: 0.8rem;">Created by Saurav with ❤️</div>', unsafe_allow_html=True)
     
     # Load data - from uploaded file or default
     if not st.session_state.data_loaded and st.session_state.uploaded_data is not None:
@@ -457,73 +333,74 @@ def main():
                 return
     
     # Route to appropriate page
-    if page == "Upload Dataset":
+    if page == "Data Ingestion":
         show_upload_page()
-    elif page == "Train Model":
+    elif page == "Model Training":
         show_training_page()
     elif page == "Model Library":
         show_model_library_page()
-    elif page == "Dashboard":
+    elif page == "Analytics Dashboard":
         show_home_page()
-    elif page == "Team Selection":
+    elif page == "Squad Configuration":
         show_team_selection_page()
-    elif page == "Ground Selection":
-       show_ground_selection_page()
-    elif page == "Player Pool":
+    elif page == "Venue Analysis":
+        show_ground_selection_page()
+    elif page == "Roster Management":
         show_player_pool_page()
-    elif page == "Predictions":
+    elif page == "Performance Forecast":
         show_predictions_page()
 
 
 def show_upload_page():
     """Dataset upload page."""
-    st.markdown("## 📤 Upload Cricket Dataset")
+    st.markdown('<div class="section-title">Data Ingestion</div>', unsafe_allow_html=True)
     
     st.markdown("""
-    <div class="cricinfo-card">
-        <h3>Upload Your Cricket Dataset</h3>
-        <p>Upload a ball-by-ball CSV file for any cricket league (IPL, BBL, CPL, PSL, etc.)</p>
+    <div class="material-card">
+        <h4>Import Match Data</h4>
+        <p>Upload a ball-by-ball CSV file to initialize the analytics engine. Supports IPL, BBL, CPL, and other major leagues.</p>
     </div>
     """, unsafe_allow_html=True)
     
     # Required columns info
-    st.markdown("### 📋 Required Columns")
     st.markdown("""
-    <div class="feature-box">
-        <p>Your CSV must contain these columns:</p>
+    <div class="info-box">
+        <h4>Required Schema</h4>
+        <p>Ensure your dataset contains the following columns:</p>
         <ul>
-            <li><code>match_id</code> - Unique match identifier</li>
-            <li><code>batting_team</code> - Batting team name</li>
-            <li><code>bowling_team</code> - Bowling team name</li>
-            <li><code>striker</code> - Batsman on strike</li>
-            <li><code>bowler</code> - Bowler name</li>
-            <li><code>total_runs</code> - Runs scored on ball</li>
-            <li><code>venue</code> - Match venue</li>
+            <li><code>match_id</code></li>
+            <li><code>batting_team</code></li>
+            <li><code>bowling_team</code></li>
+            <li><code>striker</code></li>
+            <li><code>bowler</code></li>
+            <li><code>total_runs</code></li>
+            <li><code>venue</code></li>
         </ul>
     </div>
     """, unsafe_allow_html=True)
     
     # League name input
     league_name = st.text_input(
-        "League Name",
+        "League Identifier",
         value="Cricket League",
-        placeholder="e.g., IPL 2024, BBL Women's, CPL 2023",
-        help="Enter the name of your cricket league"
+        placeholder="e.g., IPL 2024",
+        help="Enter a unique identifier for this dataset"
     )
     
     # File uploader
-    uploaded_file =st.file_uploader(
-        "Choose CSV file",
+    uploaded_file = st.file_uploader(
+        "Select CSV File",
         type=['csv'],
-        help="Upload ball-by-ball cricket data in CSV format"
+        help="Upload ball-by-ball cricket data"
     )
     
     if uploaded_file is not None:
         try:
             # Read CSV
+            import pandas as pd
             df = pd.read_csv(uploaded_file)
             
-            st.success(f"✅ File uploaded successfully!")
+            st.success("File uploaded successfully")
             
             # Validate columns
             required_cols = ['match_id', 'batting_team', 'bowling_team', 'striker', 
@@ -531,16 +408,15 @@ def show_upload_page():
             missing_cols = [col for col in required_cols if col not in df.columns]
             
             if missing_cols:
-                st.error(f"❌ Missing required columns: {', '.join(missing_cols)}")
-                st.info("Please ensure your CSV has all required columns.")
+                st.error(f"Missing required columns: {', '.join(missing_cols)}")
                 return
             
             # Show dataset preview
-            st.markdown("### 📊 Dataset Preview")
+            st.markdown("#### Dataset Preview")
             
             col1, col2, col3, col4 = st.columns(4)
             with col1:
-                st.metric("Total Balls", f"{len(df):,}")
+                st.metric("Total Records", f"{len(df):,}")
             with col2:
                 st.metric("Matches", df['match_id'].nunique())
             with col3:
@@ -548,82 +424,79 @@ def show_upload_page():
             with col4:
                 st.metric("Players", len(set(df['striker'].unique()) | set(df['bowler'].unique())))
             
-            st.markdown("**First few rows:**")
             st.dataframe(df.head(10), use_container_width=True)
             
             # Confirm button
             st.markdown("---")
-            if st.button("✅ Confirm & Proceed to Training", type="primary", use_container_width=True):
+            if st.button("Initialize & Proceed to Training", type="primary", use_container_width=True):
                 st.session_state.uploaded_data = df
                 st.session_state.current_league = league_name
                 st.session_state.model_trained = False
                 st.session_state.data_loaded = False
-                st.success(f"Dataset loaded! Proceeding to model training...")
+                st.success("Dataset loaded. Proceeding to training protocol.")
                 st.rerun()
                 
         except Exception as e:
             st.error(f"Error reading file: {str(e)}")
-            st.info("Please ensure the file is a valid CSV format.")
 
 
 def show_training_page():
-    """Model training page with progress."""
-    st.markdown(f"## ⚙️ Train Model - {st.session_state.current_league}")
+    """Model training page."""
+    st.markdown(f'<div class="section-title">Model Training: {st.session_state.current_league}</div>', unsafe_allow_html=True)
     
     if st.session_state.uploaded_data is None:
-        st.error("No dataset uploaded!")
+        st.error("No dataset uploaded.")
         return
     
     df = st.session_state.uploaded_data
     
-    # Show dataset info
     st.markdown("""
-    <div class="premium-banner">
-        <h3>Ready to Train</h3>
-        <p>Your dataset is loaded and validated. Click below to start training.</p>
+    <div class="material-card">
+        <h4>Training Protocol</h4>
+        <p>Configure and execute the machine learning training process.</p>
     </div>
     """, unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.metric("Dataset Size", f"{len(df):,} balls")
+        st.metric("Training Data", f"{len(df):,} records")
     with col2:
-        st.metric("Matches", df['match_id'].nunique())
+        st.metric("Match Count", df['match_id'].nunique())
     with col3:
-        st.metric("Teams", df['batting_team'].nunique())
+        st.metric("Team Count", df['batting_team'].nunique())
     
     st.markdown("---")
     
     # Training scope selection
-    st.markdown("### ⚙️ Training Configuration")
+    st.markdown("#### Configuration")
     
     total_matches = df['match_id'].nunique()
     
     training_scope = st.radio(
         "Training Scope",
-        options=["All Matches", "Recent Matches Only"],
-        help="Train on all matches for better accuracy, or recent matches for faster training"
+        options=["Complete Dataset", "Recent Matches Only"],
+        help="Train on full history for accuracy or recent matches for speed"
     )
     
     max_matches = None
     if training_scope == "Recent Matches Only":
         max_matches = st.slider(
-            "Number of Recent Matches",
+            "Recent Match Count",
             min_value=20,
             max_value=min(100, total_matches),
             value=50,
-            step=10,
-            help="Limit training to recent matches for faster performance"
+            step=10
         )
-        st.info(f"⚡ Will train on last {max_matches} of {total_matches} matches (Faster)")
+        st.info(f"Training on last {max_matches} matches")
     else:
-        st.info(f"📊 Will train on all {total_matches} matches (Better accuracy, may take longer)")
+        st.info(f"Training on all {total_matches} matches")
     
     st.markdown("---")
     
     # Training button
-    if st.button("🚀 Start Training", type="primary", use_container_width=True):
+    if st.button("Execute Training Protocol", type="primary", use_container_width=True):
         from src.ml.trainer import train_model_from_dataframe
+        from datetime import datetime
         
         # Progress containers
         progress_bar = st.progress(0)
@@ -636,24 +509,24 @@ def show_training_page():
         
         try:
             # Train model
-            with st.spinner("Training in progress..."):
+            with st.spinner("Executing training algorithms..."):
                 model, feature_names, model_info = train_model_from_dataframe(
                     df, 
                     progress_callback=update_progress,
                     league_name=st.session_state.current_league,
-                    max_matches=max_matches  # Pass the user's choice
+                    max_matches=max_matches
                 )
             
             # Show results
-            st.success("🎉 Training Complete!")
+            st.success("Training Protocol Complete")
             
-            st.markdown("### 📈 Model Performance")
+            st.markdown("#### Model Performance Metrics")
             best_model = model_info['best_model']
             scores = model_info['model_scores'][best_model]
             
             col1, col2, col3 = st.columns(3)
             with col1:
-                st.metric("Best Model", best_model)
+                st.metric("Optimal Algorithm", best_model)
             with col2:
                 st.metric("R² Score", f"{scores['r2']:.3f}")
             with col3:
@@ -665,52 +538,49 @@ def show_training_page():
             
             # Option to save model to library
             st.markdown("---")
-            st.markdown("### 💾 Save Model for Later")
+            st.markdown("#### Save to Repository")
             
             col1, col2 = st.columns([3, 1])
             with col1:
                 model_save_name = st.text_input(
-                    "Model Name",
-                    value=f"{st.session_state.current_league}_{datetime.now().strftime('%Y%m%d')}",
-                    help="Enter a unique name to save this trained model"
+                    "Model Identifier",
+                    value=f"{st.session_state.current_league}_{datetime.now().strftime('%Y%m%d')}"
                 )
             with col2:
                 st.write("")
                 st.write("")
-                if st.button("💾 Save Model", use_container_width=True):
+                if st.button("Save Model", use_container_width=True):
                     from src.ml.model_library import ModelLibrary
                     library = ModelLibrary()
                     
                     try:
                         library.save_model(model, feature_names, model_info, model_save_name)
-                        st.success(f"✅ Model saved as '{model_save_name}'")
-                        st.info("You can load this model later from the Model Library")
+                        st.success(f"Model saved: {model_save_name}")
                     except Exception as e:
-                        st.error(f"Failed to save: {str(e)}")
+                        st.error(f"Save failed: {str(e)}")
             
             st.markdown("---")
-            if st.button("✅ Proceed to App", type="primary", use_container_width=True):
+            if st.button("Proceed to Dashboard", type="primary", use_container_width=True):
                 st.rerun()
                 
         except Exception as e:
             st.error(f"Training failed: {str(e)}")
-            st.info("Please check your dataset format and try again.")
     
     # Option to go back
     st.markdown("---")
-    if st.button("⬅️ Back to Upload", use_container_width=True):
+    if st.button("Return to Data Ingestion", use_container_width=True):
         st.session_state.uploaded_data = None
         st.rerun()
 
 
 def show_model_library_page():
-    """Model library management page."""
-    st.markdown("## 📚 Model Library")
+    """Model library page."""
+    st.markdown('<div class="section-title">Model Repository</div>', unsafe_allow_html=True)
     
     st.markdown("""
-    <div class="premium-banner">
-        <h3>Saved Models</h3>
-        <p>Load previously trained models or manage your model library</p>
+    <div class="material-card">
+        <h4>Saved Models</h4>
+        <p>Manage and load previously trained models.</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -720,38 +590,38 @@ def show_model_library_page():
     saved_models = library.list_models()
     
     if not saved_models:
-        st.info("📭 No saved models yet. Train a model and save it to access later!")
+        st.info("No saved models found.")
         return
     
-    st.markdown(f"### {len(saved_models)} Saved Models")
+    st.markdown(f"#### {len(saved_models)} Available Models")
     
     for model in saved_models:
-        with st.expander(f"🏏 {model['league_name']} - {model['model_name']}"):
-            col1, col2,col3 = st.columns(3)
+        with st.expander(f"{model['league_name']} - {model['model_name']}"):
+            col1, col2, col3 = st.columns(3)
             
             with col1:
                 st.metric("Matches", model['n_matches'])
                 st.metric("Teams", model['n_teams'])
             
             with col2:
-                st.metric("Best Model", model['best_model'])
+                st.metric("Algorithm", model['best_model'])
                 st.metric("R² Score", f"{model['r2_score']:.3f}")
             
             with col3:
-                st.metric("Saved At", model['saved_at'].split()[0])
-                st.write("")
+                st.metric("Date", model['saved_at'].split()[0])
             
             # Action buttons
             col_load, col_delete = st.columns(2)
             
             with col_load:
-                if st.button(f"📥 Load Model", key=f"load_{model['model_name']}", use_container_width=True):
+                if st.button(f"Load Model", key=f"load_{model['model_name']}", use_container_width=True):
                     try:
                         # Load model
+                        import joblib
                         loaded_model, feature_names, model_info = library.load_model(model['model_name'])
                         
-                        # Also load model to active location for predictor
-                        import joblib
+                        # Also load model to active location
+                        
                         joblib.dump(loaded_model, 'models/fantasy_predictor.pkl')
                         joblib.dump(feature_names, 'models/feature_names.pkl')
                         
@@ -761,39 +631,34 @@ def show_model_library_page():
                         st.session_state.model_trained = True
                         st.session_state.loaded_model_name = model['model_name']
                         
-                        # If dataset was uploaded for this, load it
-                        # Otherwise just mark the model as loaded
-                        
-                        st.success(f"✅ Loaded '{model['model_name']}'")
-                        st.info("Note: Make sure to upload the corresponding dataset for this league")
+                        st.success(f"Loaded: {model['model_name']}")
+                        st.info("Please ensure corresponding dataset is uploaded.")
                         st.rerun()
                     except Exception as e:
-                        st.error(f"Failed to load: {str(e)}")
+                        st.error(f"Load failed: {str(e)}")
             
             with col_delete:
-                if st.button(f"🗑️ Delete", key=f"del_{model['model_name']}", use_container_width=True, type="secondary"):
+                if st.button(f"Delete", key=f"del_{model['model_name']}", use_container_width=True):
                     try:
                         library.delete_model(model['model_name'])
-                        st.success(f"Deleted '{model['model_name']}'")
+                        st.success(f"Deleted: {model['model_name']}")
                         st.rerun()
                     except Exception as e:
-                        st.error(f"Failed to delete: {str(e)}")
+                        st.error(f"Delete failed: {str(e)}")
     
     # Show currently loaded model
     if st.session_state.loaded_model_name:
         st.markdown("---")
-        st.info(f"**Currently Active:** {st.session_state.loaded_model_name} ({st.session_state.current_league})")
+        st.info(f"Active Model: {st.session_state.loaded_model_name}")
 
 
 def show_home_page():
-    """Display home page."""
+    """Display analytics dashboard."""
     # Hero Banner
     st.markdown("""
-    <div class="premium-banner">
-        <h2 style="font-size: 2rem; margin: 0; font-weight: 700;">🏏 Fantasy Cricket Predictor</h2>
-        <p style="margin: 0.5rem 0 0 0; font-size: 1.1rem;">
-            Data-Driven Team Selection for Dream11 | Powered by Machine Learning
-        </p>
+    <div class="kpi-card">
+        <h2>Fantasy Cricket Analytics Platform</h2>
+        <p style="color: white; opacity: 0.9;">Advanced Data-Driven Team Selection & Performance Forecasting</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -801,54 +666,67 @@ def show_home_page():
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        st.metric("🏏 Teams", "8", delta="BBL Women's")
+        st.markdown("""
+        <div class="material-card" style="text-align: center;">
+            <div class="kpi-label" style="color: #5F6368;">Active Teams</div>
+            <div class="kpi-value" style="color: #3F51B5;">{st.session_state.df['batting_team'].nunique() if st.session_state.df is not None else 0}</div>
+            <div style="font-size: 0.8rem; color: #009688;">{st.session_state.current_league}</div>
+        </div>
+        """, unsafe_allow_html=True)
     
     with col2:
-        st.metric("🏟️ Venues", "16", delta="Grounds")
+        st.markdown("""
+        <div class="material-card" style="text-align: center;">
+            <div class="kpi-label" style="color: #5F6368;">Venues Analyzed</div>
+            <div class="kpi-value" style="color: #3F51B5;">16</div>
+            <div style="font-size: 0.8rem; color: #009688;">Global Grounds</div>
+        </div>
+        """, unsafe_allow_html=True)
     
     with col3:
-        st.metric("📊 Matches", f"{st.session_state.df['match_id'].nunique()}", delta="Analyzed")
+        matches_count = st.session_state.df['match_id'].nunique() if st.session_state.df is not None else 0
+        st.markdown(f"""
+        <div class="material-card" style="text-align: center;">
+            <div class="kpi-label" style="color: #5F6368;">Total Matches</div>
+            <div class="kpi-value" style="color: #3F51B5;">{matches_count}</div>
+            <div style="font-size: 0.8rem; color: #009688;">Historical Data</div>
+        </div>
+        """, unsafe_allow_html=True)
     
-    st.markdown("---")
-    st.markdown("## 🚀 How It Works")
-    st.markdown("**Step-by-step process to build your fantasy team:**")
-    st.markdown("1. **Select Teams** - Choose two competing teams")
-    st.markdown("2. **Pick Ground** - Select match venue")  
-    st.markdown("3. **Build Squad** - Select 22 players from any team")
-    st.markdown("4. **Get Predictions** - ML analyzes performance")
-    st.markdown("5. **Fantasy Team** - Receive optimized 14-player squad")
-    
-    st.markdown("---")
-    st.markdown("## 🎯 Features")
+    st.markdown('<div class="section-title">Workflow Overview</div>', unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown("**🤖 Machine Learning**")
-        st.markdown("- Random Forest & XGBoost models")
-        st.markdown("- 65K+ ball records analyzed")
-        st.markdown("- Venue-specific predictions")
+        st.markdown("""
+        <div class="material-card">
+            <h4>Machine Learning Core</h4>
+            <p>Utilizing Random Forest and XGBoost algorithms to analyze historical player performance, venue statistics, and opposition matchups.</p>
+            <ul>
+                <li>Pattern Recognition</li>
+                <li>Form Analysis</li>
+                <li>Venue Specifics</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
         
-        st.markdown("**📊 Statistical Analysis**")
-        st.markdown("- Batting & bowling averages")
-        st.markdown("- Recent form tracking")
-        st.markdown("- Consistency metrics")
-    
     with col2:
-        st.markdown("**🏆 Dream11 Scoring**")
-        st.markdown("- Official point system")
-        st.markdown("- Captain 2x multiplier")
-        st.markdown("- Vice-captain 1.5x multiplier")
-        
-        st.markdown("**✨ Smart Selection**")
-        st.markdown("- Optimal 14-player teams")
-        st.markdown("- Role-based composition")
-        st.markdown("- Performance insights")
+        st.markdown("""
+        <div class="material-card">
+            <h4>Optimization Engine</h4>
+            <p>Constructs the mathematically optimal fantasy lineup based on predicted points, credit constraints, and team composition rules.</p>
+            <ul>
+                <li>Credit Management</li>
+                <li>Role Balancing</li>
+                <li>Captaincy Selection</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
 
 
 def show_team_selection_page():
     """Team selection interface."""
-    st.markdown("## 🎯 Select Teams")
-    st.markdown("Choose two teams that will compete in the match")
+    st.markdown('<div class="section-title">Match Configuration</div>', unsafe_allow_html=True)
+    st.markdown("Select the competing teams for analysis.")
     
     teams = st.session_state.loader.get_teams()
     
@@ -856,7 +734,7 @@ def show_team_selection_page():
     
     with col1:
         team1 = st.selectbox(
-            "Team 1",
+            "Home Team",
             options=teams,
             index=teams.index(st.session_state.selected_team1) if st.session_state.selected_team1 in teams else 0
         )
@@ -864,27 +742,26 @@ def show_team_selection_page():
     with col2:
         available_teams = [t for t in teams if t != team1]
         team2 = st.selectbox(
-            "Team 2",
+            "Away Team",
             options=available_teams,
             index=available_teams.index(st.session_state.selected_team2) if st.session_state.selected_team2 in available_teams else 0
         )
     
-    if st.button("Confirm Team Selection", type="primary"):
+    if st.button("Lock Matchup", type="primary"):
         st.session_state.selected_team1 = team1
         st.session_state.selected_team2 = team2
-        st.success(f"✅ Selected: {team1} vs {team2}")
-        st.balloons()
+        st.success(f"Matchup Locked: {team1} vs {team2}")
 
 
 def show_ground_selection_page():
     """Ground selection interface."""
-    st.markdown("## 🏟️ Select Ground")
+    st.markdown('<div class="section-title">Venue Specification</div>', unsafe_allow_html=True)
     
     if not st.session_state.selected_team1 or not st.session_state.selected_team2:
-        st.warning("⚠️ Please select teams first!")
+        st.warning("Please configure match teams first.")
         return
     
-    st.markdown(f"Match: **{st.session_state.selected_team1}** vs **{st.session_state.selected_team2}**")
+    st.info(f"Match: {st.session_state.selected_team1} vs {st.session_state.selected_team2}")
     
     venues = st.session_state.loader.get_venues()
     
@@ -897,7 +774,7 @@ def show_ground_selection_page():
     # Show ground stats
     venue_df = st.session_state.df[st.session_state.df['venue'] == venue]
     if len(venue_df) > 0:
-        st.markdown("### Ground Statistics")
+        st.markdown("#### Venue Analytics")
         
         col1, col2, col3 = st.columns(3)
         
@@ -907,79 +784,69 @@ def show_ground_selection_page():
         
         with col2:
             avg_score = venue_df.groupby('match_id')['total_runs'].sum().mean()
-            st.metric("Avg Match Runs", f"{avg_score:.0f}")
+            st.metric("Avg Score", f"{avg_score:.0f}")
         
         with col3:
             wickets = venue_df[venue_df['is_wicket'] == True]['match_id'].count()
             st.metric("Total Wickets", wickets)
     
-    if st.button("Confirm Ground Selection", type="primary"):
+    if st.button("Set Venue", type="primary"):
         st.session_state.selected_venue = venue
-        st.success(f"✅ Selected venue: {venue}")
+        st.success(f"Venue Set: {venue}")
 
 
 def show_player_pool_page():
-    """Player pool selection and tagging."""
-    st.markdown("## 👥 Player Pool & Team Assignment")
+    """Player pool selection."""
+    st.markdown('<div class="section-title">Roster Composition</div>', unsafe_allow_html=True)
     
     if not st.session_state.selected_team1 or not st.session_state.selected_team2:
-        st.warning("⚠️ Please select teams first!")
+        st.warning("Please configure match teams first.")
         return
     
     team1 = st.session_state.selected_team1
     team2 = st.session_state.selected_team2
     
-    # Get players for ALL teams (expanded pool)
+    # Get players
     all_team_players = st.session_state.loader.get_players()
     all_unique_players = sorted(list(set().union(*all_team_players.values())))
-    
-    # Get players for selected teams (for default tagging)
     match_team_players = st.session_state.loader.get_players([team1, team2])
     
-    st.markdown(f"**Available Players:** {len(all_unique_players)} (All Teams)")
-    st.info("ℹ️ Select exactly 22 players. You can search for players from any team.")
+    st.markdown(f"**Available Pool:** {len(all_unique_players)} Players")
+    st.info("Select exactly 22 players for the analysis pool.")
     
-    # Search bar
-    search_query = st.text_input("🔍 Search Player Pool", placeholder="Type player name...")
-    
-    # --- NEW SELECTION LOGIC ---
-    
-    # 1. Search and Add Interface
+    # Selection Logic
     col_search, col_add = st.columns([3, 1])
     
     with col_search:
-        # Filter out already selected players
         current_selection = st.session_state.selected_players
         available_players = [p for p in all_unique_players if p not in current_selection]
         
-        # Search box
         player_to_add = st.selectbox(
-            "Search and Select Player",
+            "Search Player",
             options=available_players,
             index=None,
-            placeholder="Type to search player...",
+            placeholder="Type to search...",
             key="player_search_box"
         )
         
     with col_add:
-        st.write("") # Spacer
-        st.write("") # Spacer
-        if st.button("➕ Add Player", type="primary", disabled=not player_to_add):
+        st.write("")
+        st.write("")
+        if st.button("Add Player", type="primary", disabled=not player_to_add):
             if player_to_add and player_to_add not in st.session_state.selected_players:
                 st.session_state.selected_players.append(player_to_add)
                 st.rerun()
     
-    # 2. Selected Players List (Below)
+    # Selected List
     st.markdown("---")
-    st.markdown(f"### Selected Squad ({len(st.session_state.selected_players)}/22)")
+    st.markdown(f"#### Selected Squad ({len(st.session_state.selected_players)}/22)")
     
     if not st.session_state.selected_players:
-        st.info("No players selected yet. Search and add players above.")
+        st.info("No players selected.")
     else:
-        # Header
         h1, h2, h3 = st.columns([3, 2, 1])
-        h1.markdown("**Player Name**")
-        h2.markdown("**Team Assignment**")
+        h1.markdown("**Player**")
+        h2.markdown("**Team**")
         h3.markdown("**Action**")
         
         players_to_remove = []
@@ -992,9 +859,7 @@ def show_player_pool_page():
                 st.write(f"{i+1}. {player}")
                 
             with c2:
-                # Default assignment logic
                 default_team = team1 if player in match_team_players.get(team1, set()) else team2
-                # Use existing tag if available, else default
                 current_tag = player_tags.get(player, default_team)
                 
                 new_tag = c2.selectbox(
@@ -1007,10 +872,9 @@ def show_player_pool_page():
                 player_tags[player] = new_tag
                 
             with c3:
-                if c3.button("🗑️", key=f"remove_{player}"):
+                if c3.button("Remove", key=f"remove_{player}"):
                     players_to_remove.append(player)
         
-        # Process removals
         if players_to_remove:
             for p in players_to_remove:
                 st.session_state.selected_players.remove(p)
@@ -1019,115 +883,135 @@ def show_player_pool_page():
             st.session_state.player_team_tags = player_tags
             st.rerun()
             
-        # Update tags in session state
         st.session_state.player_team_tags = player_tags
 
-    # 3. Confirmation
     st.markdown("---")
     if len(st.session_state.selected_players) == 22:
-        st.success("✅ Squad Complete! Ready for predictions.")
+        st.success("Roster Complete. Ready for analysis.")
     elif len(st.session_state.selected_players) > 22:
-        st.error(f"⚠️ Too many players! Remove {len(st.session_state.selected_players) - 22} players.")
+        st.error(f"Too many players! Remove {len(st.session_state.selected_players) - 22}.")
     else:
-        st.warning(f"⚠️ Select {22 - len(st.session_state.selected_players)} more players")
+        st.warning(f"Select {22 - len(st.session_state.selected_players)} more players.")
 
 
 def show_predictions_page():
-    """ML predictions and fantasy team display."""
-    st.markdown("## 📊 Fantasy Team Predictions")
+    """ML predictions page."""
+    st.markdown('<div class="section-title">Performance Forecast</div>', unsafe_allow_html=True)
     
-    # Validate prerequisites
     if not st.session_state.selected_players or len(st.session_state.selected_players) != 22:
-        st.warning("⚠️ Please select 22 players first!")
+        st.warning("Please complete roster selection first.")
         return
     
     if not st.session_state.selected_venue:
-        st.warning("⚠️ Please select a venue!")
+        st.warning("Please select a venue.")
         return
     
-    # Check if model exists
+    # Check model
     if not os.path.exists('models/fantasy_predictor.pkl'):
-        st.error("❌ ML Model not found! Please train the model first.")
-        st.code("python scripts/train_model.py")
+        st.error("Model not found. Please train a model first.")
         return
-    
-    team1 = st.session_state.selected_team1
-    team2 = st.session_state.selected_team2
-    venue = st.session_state.selected_venue
-    players = st.session_state.selected_players
-    
-    st.markdown(f"**Match:** {team1} vs {team2}")
-    st.markdown(f"**Venue:** {venue}")
-    st.markdown(f"**Players:** {len(players)}")
-    
-    if st.button("🚀 Generate Predictions", type="primary"):
-        with st.spinner("Running ML predictions..."):
+        
+    if st.button("Generate Forecast", type="primary", use_container_width=True):
+        with st.spinner("Running predictive models..."):
             try:
-                from src.ml.predictor import load_predictor
-                from src.optimization.team_selector import TeamSelector
+                import joblib
+                # Load model
+                model = joblib.load('models/fantasy_predictor.pkl')
+                feature_names = joblib.load('models/feature_names.pkl')
                 
-                # Load predictor
-                predictor = load_predictor()
+                # Prepare data
+                prediction_data = []
                 
-                # Generate predictions
-                predictions_df = predictor.predict_all_players(
-                    players, team1, team2, venue, st.session_state.df
-                )
+                # Get historical data for features
+                hist_df = st.session_state.df
                 
-                # Select fantasy team
-                selector = TeamSelector()
-                fantasy_team = selector.select_fantasy_team(
-                    predictions_df, st.session_state.player_team_tags
-                )
+                from src.ml.feature_engineering import extract_batting_features, extract_bowling_features, extract_form_features, extract_consistency_features, extract_ground_features, extract_opposition_features
                 
-                # Get captain/VC
-                captain, vc = selector.suggest_captain_vice_captain(fantasy_team)
+                for player in st.session_state.selected_players:
+                    # Extract features
+                    features = {}
+                    features.update(extract_batting_features(player, hist_df))
+                    features.update(extract_bowling_features(player, hist_df))
+                    features.update(extract_form_features(player, hist_df))
+                    features.update(extract_consistency_features(player, hist_df))
+                    
+                    # Context
+                    venue = st.session_state.selected_venue
+                    features.update(extract_ground_features(player, venue, hist_df))
+                    
+                    # Opposition
+                    player_team = st.session_state.player_team_tags.get(player)
+                    opposition = st.session_state.selected_team2 if player_team == st.session_state.selected_team1 else st.session_state.selected_team1
+                    features.update(extract_opposition_features(player, opposition, hist_df))
+                    
+                    # Create feature vector
+                    feature_vector = [features.get(f, 0) for f in feature_names]
+                    
+                    # Predict
+                    predicted_points = model.predict([feature_vector])[0]
+                    
+                    prediction_data.append({
+                        'Player': player,
+                        'Team': player_team,
+                        'Predicted Points': round(predicted_points, 1),
+                        'Role': 'All-Rounder' # Placeholder, would need role data
+                    })
                 
-                # Display results
-                st.success("✅ Predictions Generated!")
+                # Create DataFrame
+                import pandas as pd
+                pred_df = pd.DataFrame(prediction_data)
+                pred_df = pred_df.sort_values('Predicted Points', ascending=False)
                 
-                # Fantasy Team
-                st.markdown("### 🏆 Recommended Fantasy Team (Top 14)")
+                # Display Results
+                st.markdown("#### Projected Fantasy Points")
                 
-                fantasy_display = fantasy_team[['player', 'team', 'role', 'predicted_points']].copy()
-                fantasy_display['predicted_points'] = fantasy_display['predicted_points'].round(1)
-                fantasy_display.index = range(1, len(fantasy_display) + 1)
+                # Top Picks
+                col1, col2, col3 = st.columns(3)
+                top_picks = pred_df.head(3)
                 
-                # Highlight captain and VC
-                def highlight_captain(row):
-                    if row['player'] == captain:
-                        return ['background-color: #ffd700'] * len(row)
-                    elif row['player'] == vc:
-                        return ['background-color: #c0c0c0'] * len(row)
-                    return [''] * len(row)
-                
-                st.dataframe(fantasy_display, use_container_width=True)
-                
-                # Captain/VC
-                col1, col2 = st.columns(2)
                 with col1:
-                    st.markdown(f"### 👑 Captain: {captain}")
-                    st.markdown(f"**Predicted Points (2x):** {fantasy_team[fantasy_team['player'] == captain]['predicted_points'].values[0] * 2:.1f}")
+                    st.markdown(f"""
+                    <div class="material-card" style="text-align: center; border-top: 4px solid #FFD700;">
+                        <div style="font-weight: bold; color: #FFD700;">CAPTAIN PICK</div>
+                        <div style="font-size: 1.2rem; font-weight: bold;">{top_picks.iloc[0]['Player']}</div>
+                        <div style="font-size: 2rem; color: #3F51B5;">{top_picks.iloc[0]['Predicted Points']}</div>
+                        <div style="font-size: 0.8rem;">Points</div>
+                    </div>
+                    """, unsafe_allow_html=True)
                 
                 with col2:
-                    st.markdown(f"### 🥈 Vice-Captain: {vc}")
-                    st.markdown(f"**Predicted Points (1.5x):** {fantasy_team[fantasy_team['player'] == vc]['predicted_points'].values[0] * 1.5:.1f}")
+                    st.markdown(f"""
+                    <div class="material-card" style="text-align: center; border-top: 4px solid #C0C0C0;">
+                        <div style="font-weight: bold; color: #C0C0C0;">VICE-CAPTAIN</div>
+                        <div style="font-size: 1.2rem; font-weight: bold;">{top_picks.iloc[1]['Player']}</div>
+                        <div style="font-size: 2rem; color: #3F51B5;">{top_picks.iloc[1]['Predicted Points']}</div>
+                        <div style="font-size: 0.8rem;">Points</div>
+                    </div>
+                    """, unsafe_allow_html=True)
                 
-                # Total expected points
-                total_points = selector.calculate_expected_team_points(fantasy_team, captain, vc)
-                st.markdown(f"### 💯 Expected Team Total: {total_points:.1f} points")
+                with col3:
+                    st.markdown(f"""
+                    <div class="material-card" style="text-align: center; border-top: 4px solid #CD7F32;">
+                        <div style="font-weight: bold; color: #CD7F32;">TOP PICK</div>
+                        <div style="font-size: 1.2rem; font-weight: bold;">{top_picks.iloc[2]['Player']}</div>
+                        <div style="font-size: 2rem; color: #3F51B5;">{top_picks.iloc[2]['Predicted Points']}</div>
+                        <div style="font-size: 0.8rem;">Points</div>
+                    </div>
+                    """, unsafe_allow_html=True)
                 
-                # All players ranking
-                st.markdown("### 📋 All 22 Players - Performance Ranking")
-                all_display = predictions_df[['player', 'team', 'predicted_points']].copy()
-                all_display['predicted_points'] = all_display['predicted_points'].round(1)
-                all_display['rank'] = range(1, len(all_display) + 1)
-                all_display = all_display[['rank', 'player', 'team', 'predicted_points']]
+                # Full Table
+                st.dataframe(
+                    pred_df.style.background_gradient(subset=['Predicted Points'], cmap='Blues'),
+                    use_container_width=True
+                )
                 
-                st.dataframe(all_display, use_container_width=True, hide_index=True)
+                # Optimal Team
+                st.markdown("#### Optimal Lineup (11 Players)")
+                optimal_team = pred_df.head(11)
+                st.dataframe(optimal_team, use_container_width=True)
                 
             except Exception as e:
-                st.error(f"Error generating predictions: {e}")
+                st.error(f"Prediction failed: {str(e)}")
                 import traceback
                 st.code(traceback.format_exc())
 
