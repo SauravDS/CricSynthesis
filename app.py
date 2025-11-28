@@ -21,335 +21,324 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS - Cricinfo Dashboard Style
+# Professional Enterprise CSS
 def apply_custom_css():
     st.markdown("""
     <style>
-    /* Import Google Fonts */
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap');
+    /* Import Professional Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
     
     /* Global Styles */
     * {
-        font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
     
-    /* Main Container - Clean White Background */
+    /* Main Container - Professional Gray Background */
     .main {
-        background: #f8f9fa;
-        padding: 1rem 2rem;
+        background: #f5f7fa;
+        padding: 2rem 3rem;
     }
     
-    /* Sidebar Styling - Cricinfo Green */
+    /* Sidebar - Dark Professional Theme */
     [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #09847A 0%, #076d64 100%);
-        border-right: none;
+        background: #1a1d29;
+        border-right: 1px solid #2d3142;
     }
     
     [data-testid="stSidebar"] * {
-        color: #ffffff !important;
+        color: #e4e7eb !important;
     }
     
     [data-testid="stSidebar"] h1, 
     [data-testid="stSidebar"] h2, 
     [data-testid="stSidebar"] h3 {
         color: #ffffff !important;
+        font-weight: 600;
+        letter-spacing: -0.01em;
     }
     
-    /* Main Header - Bold Cricinfo Style */
+    /* Main Header - Enterprise Style */
     .main-header {
-        font-size: 3rem;
-        font-weight: 900;
-        text-align: center;
-        padding: 1.5rem 0 0.5rem 0;
-        color: #09847A;
-        letter-spacing: -0.02em;
-        text-transform: uppercase;
+        font-size: 2.25rem;
+        font-weight: 700;
+        color: #1a1d29;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.03em;
     }
     
     .sub-header {
-        font-size: 1.1rem;
-        color: #5a5a5a;
-        text-align: center;
-        margin-bottom: 2rem;
+        font-size: 1rem;
+        color: #6b7280;
         font-weight: 400;
+        margin-bottom: 2.5rem;
     }
     
     /* Section Headers */
     h1, h2, h3 {
-        color: #222222 !important;
-        font-weight: 700 !important;
+        color: #1a1d29 !important;
+        font-weight: 600 !important;
+        letter-spacing: -0.02em !important;
     }
     
     h2 {
-        border-bottom: 3px solid #09847A;
-        padding-bottom: 0.5rem;
+        font-size: 1.5rem !important;
         margin-bottom: 1.5rem !important;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #e5e7eb;
     }
     
-    /* Cricinfo-style Cards */
-    .cricinfo-card {
+    /* Professional Data Card */
+    .analytics-card {
         background: #ffffff;
-        border: 1px solid #e0e0e0;
+        border: 1px solid #e5e7eb;
         border-radius: 8px;
         padding: 1.5rem;
         margin: 1rem 0;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-        transition: all 0.3s ease;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
     
-    .cricinfo-card:hover {
-        box-shadow: 0 4px 12px rgba(9, 132, 122, 0.15);
-        border-color: #09847A;
+    .analytics-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        border-color: #d1d5db;
     }
     
-    /* Match Card Style */
-    .match-card {
+    /* Metric Display - Dashboard Style */
+    .metric-display {
         background: #ffffff;
-        border-left: 4px solid #09847A;
-        border-radius: 4px;
-        padding: 1.25rem;
-        margin: 1rem 0;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e5e7eb;
+        border-left: 4px solid #3b82f6;
+        padding: 1.25rem 1.5rem;
+        margin: 0.75rem 0;
     }
     
-    /* Stat Cards - Score Display Style */
-    .stat-card {
-        background: linear-gradient(135deg, #09847A 0%, #0a9b8f 100%);
-        color: white;
-        border-radius: 8px;
-        padding: 1.5rem;
-        text-align: center;
-        box-shadow: 0 3px 8px rgba(9, 132, 122, 0.3);
-        transition: transform 0.2s ease;
-    }
-    
-    .stat-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 16px rgba(9, 132, 122, 0.4);
-    }
-    
-    .stat-number {
-        font-size: 2.5rem;
-        font-weight: 900;
-        margin: 0;
-        color: #ffffff;
-    }
-    
-    .stat-label {
-        font-size: 0.9rem;
-        font-weight: 500;
-        margin-top: 0.5rem;
-        opacity: 0.95;
+    .metric-label {
+        font-size: 0.75rem;
+        font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.05em;
+        color: #6b7280;
+        margin-bottom: 0.5rem;
     }
     
-    /* Buttons - Cricinfo Green */
+    .metric-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1a1d29;
+        font-family: 'IBM Plex Mono', monospace;
+    }
+    
+    /* Professional Buttons */
     .stButton > button {
-        background: #09847A;
+        background: #3b82f6;
         color: white;
         border: none;
-        padding: 0.75rem 2rem;
-        font-size: 1rem;
-        font-weight: 700;
-        border-radius: 4px;
+        padding: 0.75rem 1.5rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        border-radius: 6px;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.05em;
     }
     
     .stButton > button:hover {
-        background: #076d64;
-        box-shadow: 0 4px 12px rgba(9, 132, 122, 0.3);
-        transform: translateY(-1px);
+        background: #2563eb;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
     }
     
     .stButton > button:active {
-        transform: translateY(0);
+        transform: scale(0.98);
     }
     
-    /* Input Fields - Clean Style */
+    /* Input Fields - Clean Professional */
     .stSelectbox > div > div,
     .stTextInput > div > div > input {
         background: #ffffff !important;
-        border: 2px solid #e0e0e0 !important;
-        border-radius: 4px !important;
-        color: #222222 !important;
-        font-weight: 500 !important;
-    }
-    
-    .stSelectbox > div > div:hover,
-    .stTextInput > div > div > input:hover {
-        border-color: #09847A !important;
+        border: 1px solid #d1d5db !important;
+        border-radius: 6px !important;
+        color: #1a1d29 !important;
+        font-weight: 400 !important;
+        padding: 0.5rem 0.75rem !important;
     }
     
     .stSelectbox > div > div:focus-within,
     .stTextInput > div > div > input:focus {
-        border-color: #09847A !important;
-        box-shadow: 0 0 0 2px rgba(9, 132, 122, 0.1) !important;
+        border-color: #3b82f6 !important;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
     }
     
-    /* DataFrames - Table Style */
+    /* DataFrames - Professional Table */
     .stDataFrame {
         background: #ffffff;
-        border: 1px solid #e0e0e0;
-        border-radius: 4px;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
     }
     
-    /* Info/Success/Warning Boxes */
+    /* Table Headers */
+    thead tr th {
+        background-color: #f9fafb !important;
+        color: #1a1d29 !important;
+        font-weight: 600 !important;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+        border-bottom: 2px solid #e5e7eb !important;
+    }
+    
+    /* Alert Boxes - Subtle Professional */
     .stAlert {
         background: #ffffff !important;
-        border-radius: 4px !important;
-        border-left: 4px solid #09847A !important;
-        color: #222222 !important;
+        border-radius: 6px !important;
+        border: 1px solid #e5e7eb !important;
+        border-left: 4px solid #3b82f6 !important;
     }
     
     /* Radio Buttons */
     .stRadio > div {
-        background: rgba(9, 132, 122, 0.05);
-        border-radius: 4px;
-        padding: 0.75rem;
+        background: #f9fafb;
+        border-radius: 6px;
+        padding: 1rem;
+        border: 1px solid #e5e7eb;
     }
     
-    /* Metrics - Bold Numbers */
+    /* Metrics - Professional Dashboard Style */
     [data-testid="stMetricValue"] {
-        font-size: 2.5rem !important;
-        font-weight: 900 !important;
-        color: #09847A !important;
+        font-size: 2rem !important;
+        font-weight: 700 !important;
+        color: #1a1d29 !important;
+        font-family: 'IBM Plex Mono', monospace !important;
     }
     
     [data-testid="stMetricLabel"] {
-        font-size: 0.95rem !important;
+        font-size: 0.75rem !important;
         font-weight: 600 !important;
-        color: #5a5a5a !important;
+        color: #6b7280 !important;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.05em;
     }
     
     [data-testid="stMetricDelta"] {
-        font-size: 0.85rem !important;
+        font-size: 0.875rem !important;
+        font-weight: 500 !important;
     }
     
     /* Dividers */
     hr {
-        border-color: #e0e0e0 !important;
+        border-color: #e5e7eb !important;
         margin: 2rem 0 !important;
     }
     
-    /* Text Colors */
+    /* Text */
     p {
-        color: #222222 !important;
+        color: #4b5563 !important;
         line-height: 1.6;
+        font-size: 0.95rem;
     }
     
     label {
-        color: #5a5a5a !important;
-        font-weight: 600 !important;
+        color: #374151 !important;
+        font-weight: 500 !important;
+        font-size: 0.875rem !important;
     }
     
-    /* Live Score Style Badge */
-    .live-badge {
+    /* Professional Status Badge */
+    .status-badge {
         display: inline-block;
-        background: #d32f2f;
-        color: white;
+        background: #dbeafe;
+        color: #1e40af;
         padding: 0.25rem 0.75rem;
-        border-radius: 4px;
+        border-radius: 12px;
         font-size: 0.75rem;
-        font-weight: 700;
+        font-weight: 600;
         text-transform: uppercase;
-        margin-left: 0.5rem;
+        letter-spacing: 0.05em;
     }
     
-    /* Captain/VC Badges - Sports Style */
-    .captain-badge {
-        display: inline-block;
-        background: #ffa726;
-        color: #000;
-        padding: 0.3rem 0.75rem;
-        border-radius: 4px;
-        font-size: 0.75rem;
-        font-weight: 700;
-        margin-left: 0.5rem;
-        text-transform: uppercase;
+    .status-badge-success {
+        background: #d1fae5;
+        color: #065f46;
     }
     
-    .vc-badge {
-        display: inline-block;
-        background: #78909c;
-        color: #fff;
-        padding: 0.3rem 0.75rem;
-        border-radius: 4px;
-        font-size: 0.75rem;
-        font-weight: 700;
-        margin-left: 0.5rem;
-        text-transform: uppercase;
+    .status-badge-warning {
+        background: #fef3c7;
+        color: #92400e;
     }
     
-    /* Score Display */
-    .score-display {
-        font-size: 3rem;
-        font-weight: 900;
-        color: #09847A;
-        line-height: 1;
+    /* Section Separator */
+    .section-separator {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
+        margin: 2rem 0;
     }
     
-    /* Step Timeline */
-    .step-line {
-        border-left: 3px solid #09847A;
-        padding-left: 1.5rem;
-        margin-left: 0.5rem;
-    }
-    
-    /* Feature Box */
-    .feature-box {
-        background: #f5f5f5;
-        border-left: 4px solid #09847A;
-        padding: 1.25rem;
+    /* Professional Info Panel */
+    .info-panel {
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-left: 4px solid #6b7280;
+        padding: 1rem 1.25rem;
         margin: 1rem 0;
         border-radius: 4px;
     }
     
-    .feature-box h4 {
-        color: #09847A !important;
-        margin-bottom: 0.75rem !important;
-        font-weight: 700 !important;
+    .info-panel-primary {
+        border-left-color: #3b82f6;
+        background: #eff6ff;
     }
     
-    .feature-box ul {
-        margin: 0;
-        padding-left: 1.25rem;
+    .info-panel-success {
+        border-left-color: #10b981;
+        background: #f0fdf4;
     }
     
-    .feature-box li {
-        color: #222222 !important;
-        margin: 0.5rem 0;
-    }
-    
-    /* Highlight Text */
-    .highlight-text {
-        color: #09847A !important;
-        font-weight: 700;
-    }
-    
-    /* Premium Content Banner */
-    .premium-banner {
-        background: linear-gradient(135deg, #09847A 0%, #0a9b8f 100%);
+    /* Professional Header Banner */
+    .header-banner {
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
         color: white;
-        padding: 2rem;
+        padding: 2rem 2.5rem;
         border-radius: 8px;
-        text-align: center;
-        margin: 2rem 0;
+        margin-bottom: 2rem;
     }
     
-    /* Clean Table Headers */
-    thead tr th {
-        background-color: #09847A !important;
+    .header-banner h2 {
         color: white !important;
-        font-weight: 700 !important;
-        text-transform: uppercase;
-        font-size: 0.85rem;
-        letter-spacing: 0.5px;
+        border: none !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    .header-banner p {
+        color: #dbeafe !important;
+    }
+    
+    /* Data Grid Layout */
+    .data-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin: 1.5rem 0;
+    }
+    
+    /* Progress Bar */
+    .stProgress > div > div {
+        background: #3b82f6 !important;
+    }
+    
+    /* Code blocks */
+    code {
+        background: #f3f4f6;
+        padding: 0.2rem 0.4rem;
+        border-radius: 3px;
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 0.875rem;
+        color: #1f2937;
+    }
+    
+    /* Expander */
+    .streamlit-expanderHeader {
+        background: #f9fafb;
+        border-radius: 6px;
+        font-weight: 600;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -396,8 +385,8 @@ def main():
     initialize_session_state()
     
     # Header
-    st.markdown('<h1 class="main-header">🏏 Fantasy Cricket Team Predictor</h1>', unsafe_allow_html=True)
-    st.markdown(f'<p class="sub-header">ML-Powered Dream11 Team Predictions for {st.session_state.current_league}</p>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">Fantasy Cricket Analytics Platform</h1>', unsafe_allow_html=True)
+    st.markdown(f'<p class="sub-header">Machine Learning-Powered Performance Predictions | {st.session_state.current_league}</p>', unsafe_allow_html=True)
     
     # Sidebar
     with st.sidebar:
@@ -406,27 +395,27 @@ def main():
         
         # Check if dataset is uploaded and model trained
         if not st.session_state.uploaded_data:
-            page = "📤 Upload Dataset"
-            st.info("📤 Upload a dataset to begin")
+            page = "Upload Dataset"
+            st.info("Upload a dataset to begin")
         elif not st.session_state.model_trained:
-            page = "⚙️ Train Model"
-            st.info("⚙️ Train model on uploaded data")
+            page = "Train Model"
+            st.info("Train model on uploaded data")
         else:
             page = st.radio(
                 "Select Page",
-                ["🏠 Home", "🎯 Team Selection", "🏟️ Ground Selection", 
-                 "👥 Player Pool", "📊 Predictions"],
+                ["Dashboard", "Team Selection", "Ground Selection", 
+                 "Player Pool", "Predictions"],
                 label_visibility="collapsed"
             )
             
             # Model Library button
             st.markdown("---")
-            if st.button("📚 Model Library", use_container_width=True):
-                page = "📚 Model Library"
+            if st.button("Model Library", use_container_width=True):
+                page = "Model Library"
             
             # Add option to change dataset
             st.markdown("---")
-            if st.button("🔄 Change Dataset", use_container_width=True):
+            if st.button("Change Dataset", use_container_width=True):
                 st.session_state.uploaded_data = None
                 st.session_state.model_trained = False
                 st.session_state.data_loaded = False
@@ -468,21 +457,21 @@ def main():
                 return
     
     # Route to appropriate page
-    if page == "📤 Upload Dataset":
+    if page == "Upload Dataset":
         show_upload_page()
-    elif page == "⚙️ Train Model":
+    elif page == "Train Model":
         show_training_page()
-    elif page == "📚 Model Library":
+    elif page == "Model Library":
         show_model_library_page()
-    elif page == "🏠 Home":
+    elif page == "Dashboard":
         show_home_page()
-    elif page == "🎯 Team Selection":
+    elif page == "Team Selection":
         show_team_selection_page()
-    elif page == "🏟️ Ground Selection":
+    elif page == "Ground Selection":
        show_ground_selection_page()
-    elif page == "👥 Player Pool":
+    elif page == "Player Pool":
         show_player_pool_page()
-    elif page == "📊 Predictions":
+    elif page == "Predictions":
         show_predictions_page()
 
 
