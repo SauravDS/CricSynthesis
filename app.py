@@ -353,10 +353,13 @@ def main():
     elif page == "Performance Forecast":
         show_predictions_page()
 
-
 def show_upload_page():
     """Dataset upload page."""
     st.markdown('<div class="section-title">Data Ingestion</div>', unsafe_allow_html=True)
+    
+    # Show currently loaded model if any
+    if st.session_state.get('loaded_model_name'):
+        st.info(f"🎯 Active Model: **{st.session_state.loaded_model_name}**")
     
     st.markdown("""
     <div class="material-card">
@@ -434,7 +437,8 @@ def show_upload_page():
             st.markdown("---")
             
             # Check if model is already loaded
-            if st.session_state.model_trained and st.session_state.loaded_model_name:
+            # Check if model is already loaded (relying on loaded_model_name persistence)
+            if st.session_state.get('loaded_model_name'):
                 st.info(f"✓ Model '{st.session_state.loaded_model_name}' is currently loaded")
                 
                 col1, col2 = st.columns(2)
@@ -443,7 +447,7 @@ def show_upload_page():
                         st.session_state.uploaded_data = df
                         st.session_state.current_league = league_name
                         st.session_state.data_loaded = False
-                        # Keep model_trained = True
+                        st.session_state.model_trained = True # Explicitly ensure this is True
                         st.success("Dataset loaded. Proceeding with existing model.")
                         st.rerun()
                 
@@ -609,9 +613,45 @@ def show_training_page():
         st.rerun()
 
 
+def load_model_callback(model_name, league_name, model_info):
+    """Callback to load model into session state."""
+    import joblib
+    from src.ml.model_library import ModelLibrary
+    
+    try:
+        library = ModelLibrary()
+        loaded_model, feature_names, _ = library.load_model(model_name)
+        
+        # Save to active location
+        joblib.dump(loaded_model, 'models/fantasy_predictor.pkl')
+        joblib.dump(feature_names, 'models/feature_names.pkl')
+        
+        # Update session state
+        st.session_state.current_league = league_name
+        st.session_state.model_info = model_info
+        st.session_state.model_trained = True
+        st.session_state.loaded_model_name = model_name
+        
+        # Force a flag to indicate loading happened (for debug)
+        st.session_state.just_loaded = True
+        
+    except Exception as e:
+        st.session_state.load_error = str(e)
+
 def show_model_library_page():
     """Model library page."""
     st.markdown('<div class="section-title">Model Repository</div>', unsafe_allow_html=True)
+    
+    # Check for load error
+    if 'load_error' in st.session_state:
+        st.error(f"Load failed: {st.session_state.load_error}")
+        del st.session_state.load_error
+        
+    # Check for successful load
+    if st.session_state.get('just_loaded'):
+        st.success(f"✓ Model loaded: {st.session_state.loaded_model_name}")
+        st.info("📂 Next: Go to 'Data Ingestion' page and upload your dataset")
+        del st.session_state.just_loaded
     
     st.markdown("""
     <div class="material-card">
@@ -650,28 +690,13 @@ def show_model_library_page():
             col_load, col_delete = st.columns(2)
             
             with col_load:
-                if st.button(f"Load Model", key=f"load_{model['model_name']}", use_container_width=True):
-                    try:
-                        # Load model
-                        import joblib
-                        loaded_model, feature_names, model_info = library.load_model(model['model_name'])
-                        
-                        # Also load model to active location
-                        
-                        joblib.dump(loaded_model, 'models/fantasy_predictor.pkl')
-                        joblib.dump(feature_names, 'models/feature_names.pkl')
-                        
-                        # Update session state
-                        st.session_state.current_league = model['league_name']
-                        st.session_state.model_info = model_info
-                        st.session_state.model_trained = True
-                        st.session_state.loaded_model_name = model['model_name']
-                        
-                        st.success(f"✓ Model loaded: {model['model_name']}")
-                        st.info("📂 Next: Upload the dataset for this league via Data Ingestion page")
-                        st.rerun()
-                    except Exception as e:
-                        st.error(f"Load failed: {str(e)}")
+                st.button(
+                    f"Load Model", 
+                    key=f"load_{model['model_name']}", 
+                    use_container_width=True,
+                    on_click=load_model_callback,
+                    args=(model['model_name'], model['league_name'], None) # model_info is loaded inside callback now
+                )
             
             with col_delete:
                 if st.button(f"Delete", key=f"del_{model['model_name']}", use_container_width=True):
