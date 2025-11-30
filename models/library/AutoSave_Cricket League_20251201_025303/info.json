@@ -1,0 +1,27 @@
+{
+  "league_name": "Cricket League",
+  "best_model": "Gradient Boosting",
+  "model_scores": {
+    "Random Forest": {
+      "r2": 0.05387886974290246,
+      "mae": 24.84599053873799,
+      "rmse": 31.673210182160638
+    },
+    "XGBoost": {
+      "r2": -0.019196923864321702,
+      "mae": 25.37082769621664,
+      "rmse": 32.87363765439091
+    },
+    "Gradient Boosting": {
+      "r2": 0.0889584989454747,
+      "mae": 24.350789709161013,
+      "rmse": 31.080485365034473
+    }
+  },
+  "n_samples": 8706,
+  "n_matches": 435,
+  "n_teams": 8,
+  "trained_at": "2025-12-01 02:53:03",
+  "model_name": "AutoSave_Cricket League_20251201_025303",
+  "saved_at": "2025-12-01 02:53:03"
+}

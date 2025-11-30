@@ -1,0 +1,25 @@
+{
+    "league_name": "Women-BBL",
+    "best_model": "Gradient Boosting",
+    "model_scores": {
+        "Random Forest": {
+            "r2": 0.0861594480530542,
+            "mae": 24.276258032190476,
+            "rmse": 31.36925843988531
+        },
+        "XGBoost": {
+            "r2": -0.0009659721366865881,
+            "mae": 25.154769541954472,
+            "rmse": 32.83059064946114
+        },
+        "Gradient Boosting": {
+            "r2": 0.10331413429522485,
+            "mae": 23.829869879491042,
+            "rmse": 31.073430450826887
+        }
+    },
+    "n_samples": 8706,
+    "n_matches": 435,
+    "n_teams": 8,
+    "trained_at": "2025-11-30 14:32:24"
+}

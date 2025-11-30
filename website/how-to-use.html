@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Use - RunVector</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">RunVector</div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="how-to-use.html" class="active">How to Use</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="https://your-app.streamlit.app" class="btn-launch">Launch App</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>How to Use RunVector</h1>
+            <p>Complete guide to getting started with AI-powered fantasy cricket</p>
+        </div>
+    </section>
+
+    <!-- Content -->
+    <section class="page-content">
+        <div class="container">
+            <div class="content-section">
+                <h2>Getting Started</h2>
+                <p>RunVector makes it easy to create winning fantasy cricket teams using machine learning. Follow these
+                    simple steps:</p>
+
+                <h3>Step 1: Upload Your Dataset</h3>
+                <p>Navigate to the <strong>Data Ingestion</strong> page and upload a cricket ball-by-ball CSV file in
+                    Cricsheet format. Your dataset should include:</p>
+                <ul>
+                    <li><code>match_id</code> - Unique match identifier</li>
+                    <li><code>batting_team</code> - Team batting</li>
+                    <li><code>bowling_team</code> - Team bowling</li>
+                    <li><code>striker</code> - Batsman on strike</li>
+                    <li><code>bowler</code> - Bowler</li>
+                    <li><code>runs_off_bat</code> - Runs scored</li>
+                    <li><code>extras</code> - Extra runs</li>
+                    <li><code>venue</code> - Ground name</li>
+                </ul>
+
+                <h3>Step 2: Train or Load a Model</h3>
+                <p>You have two options:</p>
+                <ul>
+                    <li><strong>Train a new model:</strong> Go to Model Training and select your training scope
+                        (complete dataset or recent matches only)</li>
+                    <li><strong>Load existing model:</strong> Click "Model Library" in the sidebar and select a
+                        previously saved model</li>
+                </ul>
+                <p><em>Note: Models are automatically saved to the library after training completes.</em></p>
+
+                <h3>Step 3: Configure Your Match</h3>
+                <p>On the <strong>Squad Configuration</strong> page:</p>
+                <ol>
+                    <li>Select Team 1 from the dropdown</li>
+                    <li>Select Team 2 from the dropdown</li>
+                    <li>Choose the venue where the match will be played</li>
+                </ol>
+
+                <h3>Step 4: Select Players</h3>
+                <p>Go to <strong>Roster Management</strong> and build your squad:</p>
+                <ul>
+                    <li>Search for players using the search box</li>
+                    <li>Add players to your selection (minimum 1 player required)</li>
+                    <li>Assign each player to their respective team</li>
+                    <li>Remove players if needed</li>
+                </ul>
+
+                <h3>Step 5: Get Predictions</h3>
+                <p>Navigate to <strong>Performance Forecast</strong> to see:</p>
+                <ul>
+                    <li>AI-predicted fantasy points for each player</li>
+                    <li>Sorted rankings by predicted performance</li>
+                    <li>Captain and vice-captain recommendations</li>
+                    <li>Optimal 11-player lineup</li>
+                </ul>
+            </div>
+
+            <div class="content-section">
+                <h2>Tips for Best Results</h2>
+                <ul>
+                    <li><strong>Use complete datasets:</strong> More data = better predictions</li>
+                    <li><strong>Train on recent matches:</strong> For quick testing, use recent matches only (20-50
+                        matches)</li>
+                    <li><strong>Save your models:</strong> Build a library of models for different leagues and
+                        tournaments</li>
+                    <li><strong>Consider context:</strong> Venue and opposition matter! The AI considers these factors
+                    </li>
+                    <li><strong>Don't panic if players are missing:</strong> New/debutant players won't be in historical
+                        data - select who you can</li>
+                </ul>
+            </div>
+
+            <div class="content-section">
+                <h2>Need Help?</h2>
+                <p>If you encounter any issues or have questions:</p>
+                <ul>
+                    <li>Check the <a href="about.html">About</a> page for more details</li>
+                    <li>Visit our <a href="https://github.com/yourusername/runvector">GitHub repository</a> for
+                        documentation</li>
+                    <li>Reach out via email or social media (links in footer)</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>RunVector</h3>
+                    <p>AI-powered fantasy cricket analytics</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="how-to-use.html">How to Use</a></li>
+                        <li><a href="about.html">About</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Connect</h4>
+                    <div class="social-links">
+                        <a href="mailto:your.email@example.com" aria-label="Email">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                        <a href="https://github.com/yourusername/runvector" aria-label="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://twitter.com/yourusername" aria-label="Twitter/X">
+                            <i class="fab fa-x-twitter"></i>
+                        </a>
+                        <a href="https://instagram.com/yourusername" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 RunVector. Built with ❤️ by Saurav Kumar</p>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

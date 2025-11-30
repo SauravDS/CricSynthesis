@@ -967,8 +967,8 @@ def show_predictions_page():
     """ML predictions page."""
     st.markdown('<div class="section-title">Performance Forecast</div>', unsafe_allow_html=True)
     
-    if not st.session_state.selected_players or len(st.session_state.selected_players) != 22:
-        st.warning("Please complete roster selection first.")
+    if not st.session_state.selected_players or len(st.session_state.selected_players) < 1:
+        st.warning("Please select at least 1 player in Roster Management.")
         return
     
     if not st.session_state.selected_venue:

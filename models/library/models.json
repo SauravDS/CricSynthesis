@@ -8,6 +8,15 @@
       "best_model": "Gradient Boosting",
       "r2_score": 0.75,
       "saved_at": "2025-11-29 08:13:02"
+    },
+    {
+      "model_name": "AutoSave_Cricket League_20251201_025303",
+      "league_name": "Cricket League",
+      "n_matches": 435,
+      "n_teams": 8,
+      "best_model": "Gradient Boosting",
+      "r2_score": 0.0889584989454747,
+      "saved_at": "2025-12-01 02:53:03"
     }
   ]
 }
