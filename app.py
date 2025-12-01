@@ -15,7 +15,7 @@ from src.data.data_loader import load_dataset
 
 # Page configuration
 st.set_page_config(
-    page_title="Fantasy Cricket Analytics",
+    page_title="CricSynthesis",
     page_icon="📊",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -258,12 +258,12 @@ def main():
     initialize_session_state()
     
     # Header
-    st.markdown('<h1 class="main-header">Fantasy Cricket Analytics Platform</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">CricSynthesis</h1>', unsafe_allow_html=True)
     st.markdown(f'<p class="sub-header">Machine Learning-Powered Performance Predictions | {st.session_state.current_league}</p>', unsafe_allow_html=True)
     
     # Sidebar
     with st.sidebar:
-        st.markdown("### FCA Platform")
+        st.markdown("### CricSynthesis")
         st.markdown("---")
         
         # Model Library - Always accessible
@@ -728,7 +728,7 @@ def show_home_page():
     # Hero Banner
     st.markdown("""
     <div class="kpi-card">
-        <h2>Fantasy Cricket Analytics Platform</h2>
+        <h2>CricSynthesis</h2>
         <p style="color: white; opacity: 0.9;">Advanced Data-Driven Team Selection & Performance Forecasting</p>
     </div>
     """, unsafe_allow_html=True)
